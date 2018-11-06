@@ -1,18 +1,27 @@
 defmodule ExopProps do
-  @moduledoc """
-  Documentation for ExopProps.
-  """
+  alias ExopProps.ParamsGenerator
 
-  @doc """
-  Hello world.
+  defmacro __using__(_opts) do
+    quote do
+      import unquote(__MODULE__)
+      use ExUnitProperties
+    end
+  end
 
-  ## Examples
+  # TODO: opts should allow to (force) define a parameter value
+  defmacro params(operation, opts \\ []) do
+    {operation, []} = Code.eval_quoted(operation, [], __CALLER__)
+    {_opts, []} = Code.eval_quoted(opts, [], __CALLER__)
 
-      iex> ExopProps.hello()
-      :world
+    %{params: params, clauses: clauses} = ParamsGenerator.generate_for(operation)
 
-  """
-  def hello do
-    :world
+    {
+      :gen,
+      [context: nil],
+      [
+        {:all, [], clauses},
+        [do: {:%{}, [], Enum.map(params, &{&1, {&1, [], nil}})}]
+      ]
+    }
   end
 end
