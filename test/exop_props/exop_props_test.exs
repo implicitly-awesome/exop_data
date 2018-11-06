@@ -62,12 +62,7 @@ defmodule ExopPropsTest do
 
   describe "with contract passed instead of an operation" do
     property "Multiply contract" do
-      contract = [
-        %{name: :a, opts: [required: true, type: :integer, numericality: %{greater_than: 0}]},
-        %{name: :b, opts: [required: true, type: :integer, numericality: %{greater_than: 10}]}
-      ]
-
-      check all %{a: a, b: b} = params <- exop_props(contract) do
+      check all %{a: a, b: b} = params <- exop_props(Multiply.contract) do
         assert is_integer(a)
         assert is_integer(b)
         assert a > 0
