@@ -19,7 +19,8 @@ defmodule ExopProps.MixProject do
 
   defp deps do
     [
-      {:stream_data, "~> 0.1"}
+      {:stream_data, "~> 0.1"},
+      {:exop, "~> 1.1.4"}
     ]
   end
 end

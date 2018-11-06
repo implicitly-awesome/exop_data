@@ -1,4 +1,4 @@
-defmodule OpTest.ParamsGenerator.IntegerTest do
+defmodule ExopProps.ParamsGenerator.IntegerTest do
   use ExUnit.Case, async: false
   use ExUnitProperties
 

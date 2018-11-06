@@ -1,4 +1,4 @@
-defmodule OpTest.ParamsGenerator.FloatTest do
+defmodule ExopProps.ParamsGenerator.FloatTest do
   use ExUnit.Case, async: false
   use ExUnitProperties
 

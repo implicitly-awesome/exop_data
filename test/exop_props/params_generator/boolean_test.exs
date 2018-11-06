@@ -1,4 +1,4 @@
-defmodule OpTest.ParamsGenerator.BooleanTest do
+defmodule ExopProps.ParamsGenerator.BooleanTest do
   use ExUnit.Case, async: false
   import ExUnitProperties
 

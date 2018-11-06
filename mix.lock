@@ -1,3 +1,4 @@
 %{
+  "exop": {:hex, :exop, "1.1.4", "394b51856a87ca786c47563474da39c80b96e4a44c65b590d8b6b0f0f1e701bc", [:mix], [], "hexpm"},
   "stream_data": {:hex, :stream_data, "0.4.2", "fa86b78c88ec4eaa482c0891350fcc23f19a79059a687760ddcf8680aac2799b", [:mix], [], "hexpm"},
 }

@@ -1,4 +1,4 @@
-defmodule OpTest.OpTestTest do
+defmodule ExopPropsTest do
   use ExUnit.Case, async: false
   use ExopProps
 
@@ -35,7 +35,7 @@ defmodule OpTest.OpTestTest do
   end
 
   property "Multiply" do
-    check all %{a: a, b: b} = params <- params(Multiply) do
+    check all %{a: a, b: b} = params <- exop_props(Multiply) do
       result = Multiply.run!(params)
       expected_result = a * b
       assert result == expected_result
@@ -43,7 +43,7 @@ defmodule OpTest.OpTestTest do
   end
 
   property "Concatenate" do
-    check all %{a: a, b: b} = params <- params(Concatenate) do
+    check all %{a: a, b: b} = params <- exop_props(Concatenate) do
       result = Concatenate.run!(params)
       expected_result = a <> b
       assert result == expected_result
@@ -52,10 +52,26 @@ defmodule OpTest.OpTestTest do
 
   describe "with common filters" do
     property "in" do
-      check all %{a: a, b: b, c: c} = _params <- params(Common) do
+      check all %{a: a, b: b, c: c} = _params <- exop_props(Common) do
         assert a == :aaa
         assert b in [:bb, :bbb, :bbbb]
         assert c not in [:a, :b, :c]
+      end
+    end
+  end
+
+  describe "with contract passed instead of an operation" do
+    property "Multiply contract" do
+      contract = [
+        %{name: :a, opts: [required: true, type: :integer, numericality: %{greater_than: 0}]},
+        %{name: :b, opts: [required: true, type: :integer, numericality: %{greater_than: 10}]}
+      ]
+
+      check all %{a: a, b: b} = params <- exop_props(contract) do
+        assert is_integer(a)
+        assert is_integer(b)
+        assert a > 0
+        assert b > 10
       end
     end
   end

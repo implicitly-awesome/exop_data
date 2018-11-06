@@ -1,4 +1,4 @@
-defmodule OpTest.ParamsGenerator.AtomTest do
+defmodule ExopProps.ParamsGenerator.AtomTest do
   use ExUnit.Case, async: false
   import ExUnitProperties
 

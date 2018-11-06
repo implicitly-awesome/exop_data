@@ -1,4 +1,4 @@
-defmodule OpTest.ParamsGenerator.ListTest do
+defmodule ExopProps.ParamsGenerator.ListTest do
   use ExUnit.Case, async: false
   use ExUnitProperties
 
