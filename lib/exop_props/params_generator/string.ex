@@ -2,8 +2,8 @@ defmodule ExopProps.ParamsGenerator.String do
   @behaviour ExopProps.ParamsGenerator.Generator
 
   def generate(opts \\ []) do
-    generator = opts |> Keyword.get(:length) |> do_generate()
-    generator_opts = Keyword.get(opts, :length, [])
+#    generator_opts = Keyword.get(opts, :length, [])
+    opts |> Keyword.get(:length) |> do_generate()
   end
 
   defp do_generate(%{is: exact}), do: StreamData.string(:ascii, length: exact)
