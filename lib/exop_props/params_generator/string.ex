@@ -2,7 +2,6 @@ defmodule ExopProps.ParamsGenerator.String do
   @behaviour ExopProps.ParamsGenerator.Generator
 
   def generate(opts \\ []) do
-#    generator_opts = Keyword.get(opts, :length, [])
     opts |> Keyword.get(:length) |> do_generate()
   end
 
