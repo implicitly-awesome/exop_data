@@ -9,7 +9,7 @@ defmodule ExopProps.Mixfile do
     [
       app: :exop_props,
       version: "0.0.0",
-      elixir: "~> 1.3",
+      elixir: "~> 1.5",
       name: "ExopProps",
       description: @description,
       package: package(),
