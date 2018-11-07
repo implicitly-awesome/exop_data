@@ -2,8 +2,6 @@
 
 [![Build Status](https://travis-ci.org/madeinussr/exop_props.svg?branch=master)](https://travis-ci.org/madeinussr/exop_props)
 
-# ExopProps
-
 The goal of this library is to help you to write property-based tests by utilizing the power of Exop and [StreamData](https://github.com/whatyouhide/stream_data)
 If you already use [Exop](https://github.com/madeinussr/exop) it is super easy.
 Even if you haven't had Exop in your project you can use ExopProps - just need to provide
