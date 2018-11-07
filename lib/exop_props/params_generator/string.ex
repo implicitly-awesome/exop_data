@@ -1,4 +1,8 @@
 defmodule ExopProps.ParamsGenerator.String do
+  @moduledoc """
+  Implements ExopProps generators behaviour for `string` parameter type.
+  """
+
   @behaviour ExopProps.ParamsGenerator.Generator
 
   def generate(opts \\ []) do

@@ -1,4 +1,8 @@
 defmodule ExopProps.ParamsGenerator.Map do
+  @moduledoc """
+  Implements ExopProps generators behaviour for `map` parameter type.
+  """
+
   @behaviour ExopProps.ParamsGenerator.Generator
 
   def generate(opts \\ []), do: opts |> Keyword.get(:length) |> do_generate()

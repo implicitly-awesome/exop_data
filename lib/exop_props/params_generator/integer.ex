@@ -1,4 +1,8 @@
 defmodule ExopProps.ParamsGenerator.Integer do
+  @moduledoc """
+  Implements ExopProps generators behaviour for `integer` parameter type.
+  """
+
   @behaviour ExopProps.ParamsGenerator.Generator
 
   @diff 9999

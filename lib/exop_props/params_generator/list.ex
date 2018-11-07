@@ -1,4 +1,8 @@
 defmodule ExopProps.ParamsGenerator.List do
+  @moduledoc """
+  Implements ExopProps generators behaviour for `list` parameter type.
+  """
+
   @behaviour ExopProps.ParamsGenerator.Generator
 
   alias ExopProps.ParamsGenerator

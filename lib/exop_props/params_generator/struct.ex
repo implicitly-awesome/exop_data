@@ -1,4 +1,8 @@
 defmodule ExopProps.ParamsGenerator.Struct do
+  @moduledoc """
+  Implements ExopProps generators behaviour for `struct` parameter type.
+  """
+
   @behaviour ExopProps.ParamsGenerator.Generator
 
   use ExUnitProperties

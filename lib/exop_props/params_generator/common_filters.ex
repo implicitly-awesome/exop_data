@@ -1,4 +1,8 @@
 defmodule ExopProps.ParamsGenerator.CommonFilters do
+  @moduledoc """
+  Defines filters which are common for different types.
+  """
+
   # TODO: required & default options
 
   def filter(generator, opts), do: not_in(generator, opts)

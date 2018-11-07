@@ -1,4 +1,8 @@
 defmodule ExopProps.ParamsGenerator.Float do
+  @moduledoc """
+  Implements ExopProps generators behaviour for `float` parameter type.
+  """
+
   @behaviour ExopProps.ParamsGenerator.Generator
 
   @diff 0.1
