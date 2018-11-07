@@ -34,6 +34,29 @@ defmodule ExopPropsTest do
     def process(params), do: params
   end
 
+  defmodule Format do
+    use Exop.Operation
+
+    parameter(:a, type: :string, format: ~r/@/)
+
+    def process(%{a: a}), do: a
+  end
+
+  test "Custom generator" do
+    domains = ["gmail.com", "hotmail.com", "yahoo.com"]
+
+    email_generator =
+      gen all name <- StreamData.string(:alphanumeric),
+              name != "",
+              domain <- StreamData.member_of(domains) do
+        name <> "@" <> domain
+      end
+
+    check all %{a: a} = params <- exop_props(Format, generators: %{a: email_generator}) do
+      assert a == Format.run!(params)
+    end
+  end
+
   property "Multiply" do
     check all %{a: a, b: b} = params <- exop_props(Multiply) do
       result = Multiply.run!(params)
@@ -52,7 +75,7 @@ defmodule ExopPropsTest do
 
   describe "with common filters" do
     property "in" do
-      check all %{a: a, b: b, c: c} = _params <- exop_props(Common) do
+      check all %{a: a, b: b, c: c} <- exop_props(Common) do
         assert a == :aaa
         assert b in [:bb, :bbb, :bbbb]
         assert c not in [:a, :b, :c]
