@@ -3,12 +3,11 @@ defmodule ExopProps.ParamsGenerator.List do
   Implements ExopProps generators behaviour for `list` parameter type.
   """
 
-  @behaviour ExopProps.ParamsGenerator.Generator
+  use ExopProps
 
   alias ExopProps.ParamsGenerator
-  require ExopProps.ParamsGenerator
 
-  use ExopProps
+  @behaviour ExopProps.ParamsGenerator.Generator
 
   def generate(opts \\ []) do
     StreamData.list_of(list_item(opts), length_opts(opts))
@@ -28,6 +27,8 @@ defmodule ExopProps.ParamsGenerator.List do
   defp list_item(opts) do
     opts = opts |> Keyword.get(:list_item, []) |> Enum.into([])
 
-    if Enum.any?(opts), do: ParamsGenerator.generator(opts), else: StreamData.atom(:alphanumeric)
+    if Enum.any?(opts),
+      do: ParamsGenerator.resolve_opts(opts),
+      else: StreamData.atom(:alphanumeric)
   end
 end

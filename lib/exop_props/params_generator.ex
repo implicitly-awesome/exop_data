@@ -29,22 +29,30 @@ defmodule ExopProps.ParamsGenerator do
     """)
   end
 
-  @spec generator_for_param(ExopProps.contract_item(), keyword()) :: {atom(), StreamData.t()}
-  defp generator_for_param(%{name: param_name, opts: param_opts} = _contract_item, _opts) do
+  defp generator_for_param(%{name: param_name, opts: param_opts}, opts) do
+    generators = Keyword.get(opts, :generators, %{})
+    param_generator = Map.get(generators, param_name)
+
+    if param_generator do
+      {param_name, param_generator}
+    else
+      {param_name, build_generator(param_opts, opts)}
+    end
+  end
+
+  defp build_generator(param_opts, _opts) do
     param_opts = Enum.into(param_opts, [])
     exact_opt = Keyword.get(param_opts, :exact)
     in_list_opt = Keyword.get(param_opts, :in)
 
-    generator = resolve_exact(exact_opt) || resolve_in_list(in_list_opt) || generator(param_opts)
-
-    {param_name, generator}
+    resolve_exact(exact_opt) || resolve_in_list(in_list_opt) || resolve_opts(param_opts)
   end
 
   @doc """
   Returns a StreamData generator for parameter's opts.
   """
-  @spec generator(keyword()) :: StreamData.t()
-  def generator(param_opts) do
+  @spec resolve_opts(keyword()) :: StreamData.t()
+  def resolve_opts(param_opts) do
     param_type = Keyword.get(param_opts, :type) || :term
 
     param_opts =
@@ -73,12 +81,12 @@ defmodule ExopProps.ParamsGenerator do
   end
 
   @spec resolve_exact(any()) :: StreamData.t() | nil
-  defp resolve_exact(nil), do: nil
+  def resolve_exact(nil), do: nil
 
-  defp resolve_exact(value), do: StreamData.constant(value)
+  def resolve_exact(value), do: StreamData.constant(value)
 
   @spec resolve_in_list([any()]) :: StreamData.t() | nil
-  defp resolve_in_list(in_list) when is_list(in_list), do: StreamData.member_of(in_list)
+  def resolve_in_list(in_list) when is_list(in_list), do: StreamData.member_of(in_list)
 
-  defp resolve_in_list(_), do: nil
+  def resolve_in_list(_), do: nil
 end
