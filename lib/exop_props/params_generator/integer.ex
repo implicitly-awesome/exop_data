@@ -12,64 +12,42 @@ defmodule ExopProps.ParamsGenerator.Integer do
   end
 
   defp do_generate(%{equal_to: exact}) do
-    StreamData.integer(exact..exact)
+    StreamData.constant(exact)
   end
 
-  defp do_generate(%{greater_than: greater_than, less_than: less_than}) do
-    StreamData.filter(
-      StreamData.integer(greater_than..less_than),
-      &(&1 > greater_than && &1 < less_than)
-    )
+  defp do_generate(%{greater_than: min, less_than: max}) do
+    in_range(min + 1, max - 1)
   end
 
-  defp do_generate(%{greater_than: greater_than, less_than_or_equal_to: less_than_or_equal_to}) do
-    StreamData.filter(
-      StreamData.integer(greater_than..less_than_or_equal_to),
-      &(&1 > greater_than && &1 <= less_than_or_equal_to)
-    )
+  defp do_generate(%{greater_than: min, less_than_or_equal_to: max}) do
+    in_range(min + 1, max)
   end
 
-  defp do_generate(%{greater_than_or_equal_to: greater_than_or_equal_to, less_than: less_than}) do
-    StreamData.filter(
-      StreamData.integer(greater_than_or_equal_to..less_than),
-      &(&1 >= greater_than_or_equal_to && &1 < less_than)
-    )
+  defp do_generate(%{greater_than_or_equal_to: min, less_than: max}) do
+    in_range(min, max - 1)
   end
 
-  defp do_generate(%{
-         greater_than_or_equal_to: greater_than_or_equal_to,
-         less_than_or_equal_to: less_than_or_equal_to
-       }) do
-    StreamData.filter(
-      StreamData.integer(greater_than_or_equal_to..less_than_or_equal_to),
-      &(&1 >= greater_than_or_equal_to && &1 <= less_than_or_equal_to)
-    )
+  defp do_generate(%{greater_than_or_equal_to: min, less_than_or_equal_to: max}) do
+    in_range(min, max)
   end
 
-  defp do_generate(%{greater_than: greater_than}) do
-    StreamData.filter(
-      StreamData.integer(greater_than..(greater_than + @diff)),
-      &(&1 > greater_than)
-    )
+  defp do_generate(%{greater_than: min}) do
+    in_range(min + 1, min + @diff)
   end
 
-  defp do_generate(%{greater_than_or_equal_to: greater_than_or_equal_to}) do
-    StreamData.filter(
-      StreamData.integer(greater_than_or_equal_to..(greater_than_or_equal_to + @diff)),
-      &(&1 >= greater_than_or_equal_to)
-    )
+  defp do_generate(%{greater_than_or_equal_to: min}) do
+    in_range(min, min + @diff)
   end
 
-  defp do_generate(%{less_than: less_than}) do
-    StreamData.filter(StreamData.integer((less_than - @diff)..less_than), &(&1 < less_than))
+  defp do_generate(%{less_than: max}) do
+    in_range(max - @diff, max - 1)
   end
 
-  defp do_generate(%{less_than_or_equal_to: less_than_or_equal_to}) do
-    StreamData.filter(
-      StreamData.integer((less_than_or_equal_to - @diff)..less_than_or_equal_to),
-      &(&1 <= less_than_or_equal_to)
-    )
+  defp do_generate(%{less_than_or_equal_to: max}) do
+    in_range(max - @diff, max)
   end
 
   defp do_generate(_), do: StreamData.integer()
+
+  defp in_range(min, max), do: StreamData.integer(min..max)
 end
