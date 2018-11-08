@@ -6,6 +6,7 @@ defmodule ExopProps.CommonGenerators do
   alias StreamData.LazyTree
 
   @rand_algorithm :exsp
+  @unquoted_atom_characters [?a..?z, ?A..?Z, ?0..?9, ?_, ?@]
 
   @doc """
   Allow to generate maps with optional keys and generated values.
@@ -44,6 +45,41 @@ defmodule ExopProps.CommonGenerators do
         end)
       end)
       |> LazyTree.flatten()
+    end)
+  end
+
+  @doc """
+  Generates atoms.
+
+  ## Options
+
+    * `:length` - (integer or range) if an integer, the exact length the
+      generated atoms should be; if a range, the range in which the length of
+      the generated atoms should be. If provided, `:min_length` and
+      `:max_length` are ignored.
+
+    * `:min_length` - (integer) the minimum length of the generated atoms.
+
+    * `:max_length` - (integer) the maximum length of the generated atoms.
+
+  ## Examples
+
+      Enum.take(ExopProps.CommonGenerators.atom(), 3)
+      #=> [:xF, :y, :B_]
+  """
+  @spec atom(keyword()) :: StreamData.t()
+  def atom(options \\ []) do
+    starting_char =
+      StreamData.frequency([
+        {4, StreamData.integer(?a..?z)},
+        {2, StreamData.integer(?A..?Z)},
+        {1, StreamData.constant(?_)}
+      ])
+
+    rest = StreamData.string(@unquoted_atom_characters, options)
+
+    StreamData.map({starting_char, rest}, fn {first, rest} ->
+      String.to_atom(<<first, String.slice(rest, 1..254)::binary>>)
     end)
   end
 

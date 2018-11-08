@@ -101,13 +101,13 @@ defmodule ExopPropsTest do
     end
 
     property "equals filter" do
-      check all %{a: a} <- exop_props([%{name: :a, opts: [equals: 1]}]) do
+      check all %{a: a} <- exop_props([%{name: :a, opts: [required: true, equals: 1]}]) do
         assert 1 == a
       end
     end
 
     property "exactly filter" do
-      check all %{a: a} <- exop_props([%{name: :a, opts: [exactly: 1]}]) do
+      check all %{a: a} <- exop_props([%{name: :a, opts: [required: true, exactly: 1]}]) do
         assert 1 == a
       end
     end
