@@ -5,7 +5,7 @@ defmodule ExopProps.ParamsGenerator.Atom do
 
   @behaviour ExopProps.ParamsGenerator.Generator
 
-  def generate(opts \\ []) do
+  def generate(_opts \\ %{}) do
     # TODO: implement :alias option
     StreamData.atom(:alphanumeric)
   end

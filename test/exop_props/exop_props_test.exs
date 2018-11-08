@@ -27,7 +27,7 @@ defmodule ExopPropsTest do
   defmodule Common do
     use Exop.Operation
 
-    parameter(:a, exact: :aaa)
+    parameter(:a, exactly: :aaa)
     parameter(:b, in: [:bb, :bbb, :bbbb])
     parameter(:c, type: :atom, not_in: [:a, :b, :c])
 
@@ -95,6 +95,18 @@ defmodule ExopPropsTest do
         assert is_integer(b)
         assert a > 0
         assert b > 10
+      end
+    end
+
+    property "equals filter" do
+      check all %{a: a} <- exop_props([%{name: :a, opts: [equals: 1]}]) do
+        assert 1 == a
+      end
+    end
+
+    property "exactly filter" do
+      check all %{a: a} <- exop_props([%{name: :a, opts: [exactly: 1]}]) do
+        assert 1 == a
       end
     end
   end

@@ -5,7 +5,7 @@ defmodule ExopProps.ParamsGenerator.Map do
 
   @behaviour ExopProps.ParamsGenerator.Generator
 
-  def generate(opts \\ []), do: opts |> Keyword.get(:length) |> do_generate()
+  def generate(opts \\ %{}), do: opts |> Map.get(:length) |> do_generate()
 
   defp do_generate(%{is: exact}) do
     StreamData.map_of(StreamData.term(), StreamData.term(), length: exact)

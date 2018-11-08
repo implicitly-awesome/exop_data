@@ -5,7 +5,7 @@ defmodule ExopProps.ParamsGenerator.BooleanTest do
   import ExopProps.ParamsGenerator.Boolean, only: [generate: 1]
 
   property "generates booleans" do
-    generator = generate([])
+    generator = generate(%{})
 
     check all value <- generator do
       assert is_boolean(value)

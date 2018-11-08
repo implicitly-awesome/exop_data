@@ -5,14 +5,14 @@ defmodule ExopProps.ParamsGenerator.ListTest do
   import ExopProps.ParamsGenerator.List, only: [generate: 1]
 
   property "generates list generator" do
-    check all value <- generate([]) do
+    check all value <- generate(%{}) do
       assert is_list(value)
     end
   end
 
   describe "with :length option" do
     property "is" do
-      generator = generate(length: %{is: 5})
+      generator = generate(%{length: %{is: 5}})
 
       check all value <- generator do
         assert length(value) == 5
@@ -20,7 +20,7 @@ defmodule ExopProps.ParamsGenerator.ListTest do
     end
 
     property "in" do
-      generator = generate(length: %{in: 5..10})
+      generator = generate(%{length: %{in: 5..10}})
 
       check all value <- generator do
         assert length(value) >= 5
@@ -29,7 +29,7 @@ defmodule ExopProps.ParamsGenerator.ListTest do
     end
 
     property "min & max" do
-      generator = generate(length: %{min: 5, max: 10})
+      generator = generate(%{length: %{min: 5, max: 10}})
 
       check all value <- generator do
         assert length(value) >= 5
@@ -38,7 +38,7 @@ defmodule ExopProps.ParamsGenerator.ListTest do
     end
 
     property "min" do
-      generator = generate(length: %{min: 5})
+      generator = generate(%{length: %{min: 5}})
 
       check all value <- generator do
         assert length(value) >= 5
@@ -46,7 +46,7 @@ defmodule ExopProps.ParamsGenerator.ListTest do
     end
 
     property "max" do
-      generator = generate(length: %{max: 5})
+      generator = generate(%{length: %{max: 5}})
 
       check all value <- generator do
         assert length(value) <= 5
@@ -60,7 +60,7 @@ defmodule ExopProps.ParamsGenerator.ListTest do
 
   describe "with :list_item option" do
     property ":type" do
-      generator = generate(list_item: %{type: :integer}, length: %{min: 1})
+      generator = generate(%{list_item: %{type: :integer}, length: %{min: 1}})
 
       check all value <- generator do
         assert value |> Enum.take_random(1) |> Enum.at(0) |> is_integer()
@@ -69,13 +69,13 @@ defmodule ExopProps.ParamsGenerator.ListTest do
 
     property ":numericality" do
       generator =
-        generate(
+        generate(%{
           list_item: %{
             type: :integer,
             numericality: %{greater_than: 10, less_than_or_equal_to: 100}
           },
           length: %{min: 1}
-        )
+        })
 
       check all value <- generator do
         random_item = value |> Enum.take_random(1) |> Enum.at(0)
@@ -86,7 +86,7 @@ defmodule ExopProps.ParamsGenerator.ListTest do
     end
 
     property ":length" do
-      generator = generate(list_item: %{type: :string, length: %{in: 1..5}}, length: %{min: 1})
+      generator = generate(%{list_item: %{type: :string, length: %{in: 1..5}}, length: %{min: 1}})
 
       check all value <- generator do
         random_item = value |> Enum.take_random(1) |> Enum.at(0)

@@ -7,7 +7,7 @@ defmodule ExopProps.ParamsGenerator.CommonFilters do
 
   def filter(generator, opts), do: not_in(generator, opts)
 
-  def not_in(generator, opts), do: do_not_in(generator, Keyword.get(opts, :not_in))
+  def not_in(generator, opts), do: do_not_in(generator, Map.get(opts, :not_in))
 
   defp do_not_in(generator, list) when is_list(list) do
     StreamData.filter(generator, &(&1 not in list))
