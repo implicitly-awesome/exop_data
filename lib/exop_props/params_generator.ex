@@ -86,6 +86,9 @@ defmodule ExopProps.ParamsGenerator do
     |> resolve_opts()
   end
 
+  @spec resolve_exact(any()) :: StreamData.t()
+  defp resolve_exact(value), do: StreamData.constant(value)
+
   @spec resolve_in_list([any()]) :: StreamData.t() | nil
   def resolve_in_list(in_list) when is_list(in_list), do: StreamData.member_of(in_list)
 

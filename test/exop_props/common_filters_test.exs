@@ -8,8 +8,12 @@ defmodule ExopProps.CommonFiltersTest do
 
       check_list = contract |> exop_props() |> Enum.take(1000)
 
-      assert Enum.any?(check_list, fn %{a: a} -> is_integer(a) end)
-      assert Enum.any?(check_list, fn %{a: a} -> is_nil(a) end)
+      check_list_ints = Enum.filter(check_list, fn %{a: a} -> is_integer(a) end)
+      check_list_nils = Enum.filter(check_list, fn %{a: a} -> is_nil(a) end)
+
+      assert Enum.count(check_list_ints) > 0
+      assert Enum.count(check_list_nils) > 0
+      assert Enum.count(check_list) == (Enum.count(check_list_ints) + Enum.count(check_list_nils))
     end
   end
 end
