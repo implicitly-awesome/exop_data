@@ -7,15 +7,34 @@ defmodule ExopProps.CommonGenerators do
 
   @rand_algorithm :exsp
 
-  @spec map([StreamData.t()], [atom()], [atom()]) :: StreamData.t()
-  def map(map_generator, required_keys, optional_keys) do
+  @doc """
+  Allow to generate maps with optional keys and generated values.
+
+  `data_map` is a map of `fixed_key => data` pairs.
+  `optional_keys` is a list of optional keys, which can be or cannot be in final result.
+
+  ## Examples
+
+      data = ExopProps.CommonGenerators.map(
+        %{
+          integer: StreamData.integer(),
+          binary: StreamData.binary(),
+        },
+        [:integer]
+      )
+      Enum.take(data, 3)
+      #=> [%{binary: "a", integer: 1}, %{binary: "b"}, %{binary: "c", integer: 2}]
+  """
+  @spec map([StreamData.t()], [atom()]) :: StreamData.t()
+  def map(data_map, optional_keys) do
+    required_keys = Map.keys(data_map) -- optional_keys
     optional_keys_data = sublist(optional_keys)
 
     new(fn seed, size ->
       {seed1, seed2} = split_seed(seed)
       subkeys_tree = call(optional_keys_data, seed1, size)
 
-      map_generator
+      data_map
       |> Map.take(required_keys ++ subkeys_tree.root)
       |> StreamData.fixed_map()
       |> call(seed2, size)
@@ -28,6 +47,7 @@ defmodule ExopProps.CommonGenerators do
     end)
   end
 
+  @spec sublist([any()]) :: StreamData.t()
   defp sublist(list) do
     StreamData.map(
       StreamData.list_of(StreamData.boolean(), length: length(list)),
@@ -37,16 +57,19 @@ defmodule ExopProps.CommonGenerators do
     )
   end
 
+  @spec split_seed(integer()) :: {integer(), integer()}
   defp split_seed(seed) do
     {int, seed} = :rand.uniform_s(1_000_000_000, seed)
     new_seed = :rand.seed_s(@rand_algorithm, {int, 0, 0})
     {new_seed, seed}
   end
 
+  @spec call(StreamData.t(), integer(), integer()) :: LazyTree.t()
   defp call(%StreamData{generator: generator}, seed, size) do
     %LazyTree{} = generator.(seed, size)
   end
 
+  @spec new((any(), any() -> any())) :: StreamData.t()
   defp new(generator) when is_function(generator, 2) do
     %StreamData{generator: generator}
   end

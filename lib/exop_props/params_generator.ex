@@ -17,12 +17,11 @@ defmodule ExopProps.ParamsGenerator do
   end
 
   def generate_for(contract, opts) when is_list(contract) do
-    required_keys = required_fields(contract)
     optional_keys = optional_fields(contract)
 
     contract
     |> Enum.into(%{}, &generator_for_param(&1, opts))
-    |> CommonGenerators.map(required_keys, optional_keys)
+    |> CommonGenerators.map(optional_keys)
   end
 
   def generate_for(_) do
@@ -72,13 +71,7 @@ defmodule ExopProps.ParamsGenerator do
     end
   end
 
-  defp required_fields(contract) do
-    contract
-    |> Stream.filter(&Keyword.get(&1.opts, :required, false))
-    |> Stream.map(& &1.name)
-    |> Enum.to_list()
-  end
-
+  @spec optional_fields([map()]) :: [atom()]
   defp optional_fields(contract) do
     contract
     |> Stream.reject(&Keyword.get(&1.opts, :required, false))
