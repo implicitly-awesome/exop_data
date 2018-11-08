@@ -29,38 +29,25 @@ defmodule ExopProps.ParamsGenerator do
     """)
   end
 
-  defp generator_for_param(%{name: param_name, opts: param_opts}, opts) do
-    generators = Keyword.get(opts, :generators, %{})
-    param_generator = Map.get(generators, param_name)
-
-    if param_generator do
-      {param_name, param_generator}
-    else
-      {param_name, build_generator(param_opts, opts)}
-    end
-  end
-
-  defp build_generator(param_opts, _opts) do
-    param_opts = Enum.into(param_opts, [])
-    exact_opt = Keyword.get(param_opts, :exact)
-    in_list_opt = Keyword.get(param_opts, :in)
-
-    resolve_exact(exact_opt) || resolve_in_list(in_list_opt) || resolve_opts(param_opts)
-  end
-
   @doc """
   Returns a StreamData generator for parameter's opts.
   """
-  @spec resolve_opts(keyword()) :: StreamData.t()
-  def resolve_opts(param_opts) do
-    param_type = Keyword.get(param_opts, :type) || :term
+  @spec resolve_opts(map()) :: StreamData.t()
+  def resolve_opts(%{equals: value}), do: resolve_exact(value)
+
+  def resolve_opts(%{exactly: value}), do: resolve_exact(value)
+
+  def resolve_opts(%{in: values}), do: resolve_in_list(values)
+
+  def resolve_opts(param_opts) when is_map(param_opts) do
+    param_type = Map.get(param_opts, :type, :term)
 
     param_opts =
-      if param_type == :struct && Keyword.get(param_opts, :struct) do
-        %struct_module{} = Keyword.get(param_opts, :struct)
-        Keyword.put(param_opts, :struct_module, struct_module)
+      if param_type == :struct && Map.get(param_opts, :struct) do
+        %struct_module{} = Map.get(param_opts, :struct)
+        Map.put(param_opts, :struct_module, struct_module)
       else
-        Keyword.put(param_opts, :type, :map)
+        Map.put(param_opts, :type, :map)
       end
 
     generator_module =
@@ -80,13 +67,24 @@ defmodule ExopProps.ParamsGenerator do
     end
   end
 
-  @spec resolve_exact(any()) :: StreamData.t() | nil
-  def resolve_exact(nil), do: nil
+  defp generator_for_param(%{name: param_name, opts: param_opts}, opts) do
+    generators = Keyword.get(opts, :generators, %{})
+    param_generator = Map.get(generators, param_name)
 
-  def resolve_exact(value), do: StreamData.constant(value)
+    if param_generator do
+      {param_name, param_generator}
+    else
+      {param_name, build_generator(param_opts, opts)}
+    end
+  end
 
-  @spec resolve_in_list([any()]) :: StreamData.t() | nil
-  def resolve_in_list(in_list) when is_list(in_list), do: StreamData.member_of(in_list)
+  defp build_generator(param_opts, _opts) do
+    param_opts
+    |> Enum.into(%{})
+    |> resolve_opts()
+  end
 
-  def resolve_in_list(_), do: nil
+  defp resolve_exact(value), do: StreamData.constant(value)
+
+  defp resolve_in_list(in_list) when is_list(in_list), do: StreamData.member_of(in_list)
 end

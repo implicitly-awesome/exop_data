@@ -7,11 +7,13 @@ defmodule ExopProps.ParamsGenerator.Float do
 
   @diff 0.1
 
-  def generate(opts \\ []), do: opts |> Keyword.get(:numericality) |> do_generate()
+  def generate(opts \\ %{}), do: opts |> Map.get(:numericality) |> do_generate()
 
-  defp do_generate(%{equal_to: exact}) do
-    StreamData.float(min: exact, max: exact)
-  end
+  defp do_generate(%{equal_to: exact}), do: constant(exact)
+
+  defp do_generate(%{equals: exact}), do: constant(exact)
+
+  defp do_generate(%{is: exact}), do: constant(exact)
 
   defp do_generate(%{greater_than: greater_than, less_than: less_than}) do
     StreamData.filter(
@@ -67,4 +69,6 @@ defmodule ExopProps.ParamsGenerator.Float do
   end
 
   defp do_generate(_), do: StreamData.float()
+
+  defp constant(value), do: StreamData.constant(value)
 end

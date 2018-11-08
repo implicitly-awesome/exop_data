@@ -7,13 +7,15 @@ defmodule ExopProps.ParamsGenerator.Integer do
 
   @diff 9999
 
-  def generate(opts \\ []) do
-    opts |> Keyword.get(:numericality) |> do_generate()
+  def generate(opts \\ %{}) do
+    opts |> Map.get(:numericality) |> do_generate()
   end
 
-  defp do_generate(%{equal_to: exact}) do
-    StreamData.constant(exact)
-  end
+  defp do_generate(%{equal_to: exact}), do: constant(exact)
+
+  defp do_generate(%{equals: exact}), do: constant(exact)
+
+  defp do_generate(%{is: exact}), do: constant(exact)
 
   defp do_generate(%{greater_than: min, less_than: max}) do
     in_range(min + 1, max - 1)
@@ -48,6 +50,8 @@ defmodule ExopProps.ParamsGenerator.Integer do
   end
 
   defp do_generate(_), do: StreamData.integer()
+
+  defp constant(value), do: StreamData.constant(value)
 
   defp in_range(min, max), do: StreamData.integer(min..max)
 end

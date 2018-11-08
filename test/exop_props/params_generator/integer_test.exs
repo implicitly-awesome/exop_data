@@ -5,14 +5,30 @@ defmodule ExopProps.ParamsGenerator.IntegerTest do
   import ExopProps.ParamsGenerator.Integer, only: [generate: 1]
 
   property "generates integer generator" do
-    check all value <- generate([]) do
+    check all value <- generate(%{}) do
       assert is_integer(value)
     end
   end
 
   describe "with :numericality option" do
     property "equal_to" do
-      generator = generate(numericality: %{equal_to: 12})
+      generator = generate(%{numericality: %{equal_to: 12}})
+
+      check all value <- generator do
+        assert value == 12
+      end
+    end
+
+    property "equals" do
+      generator = generate(%{numericality: %{equals: 12}})
+
+      check all value <- generator do
+        assert value == 12
+      end
+    end
+
+    property "is" do
+      generator = generate(%{numericality: %{is: 12}})
 
       check all value <- generator do
         assert value == 12
@@ -20,7 +36,7 @@ defmodule ExopProps.ParamsGenerator.IntegerTest do
     end
 
     property "greater_than" do
-      generator = generate(numericality: %{greater_than: 1})
+      generator = generate(%{numericality: %{greater_than: 1}})
 
       check all value <- generator do
         assert value > 1
@@ -28,7 +44,7 @@ defmodule ExopProps.ParamsGenerator.IntegerTest do
     end
 
     property "greater_than_or_equal_to" do
-      generator = generate(numericality: %{greater_than_or_equal_to: 1})
+      generator = generate(%{numericality: %{greater_than_or_equal_to: 1}})
 
       check all value <- generator do
         assert value >= 1
@@ -36,7 +52,7 @@ defmodule ExopProps.ParamsGenerator.IntegerTest do
     end
 
     property "less_than" do
-      generator = generate(numericality: %{less_than: 1})
+      generator = generate(%{numericality: %{less_than: 1}})
 
       check all value <- generator do
         assert value < 1
@@ -44,7 +60,7 @@ defmodule ExopProps.ParamsGenerator.IntegerTest do
     end
 
     property "less_than_or_equal_to" do
-      generator = generate(numericality: %{less_than_or_equal_to: 1})
+      generator = generate(%{numericality: %{less_than_or_equal_to: 1}})
 
       check all value <- generator do
         assert value <= 1
@@ -52,7 +68,7 @@ defmodule ExopProps.ParamsGenerator.IntegerTest do
     end
 
     property "equal_to & greater_than" do
-      generator = generate(numericality: %{equal_to: 12, greater_than: 1})
+      generator = generate(%{numericality: %{equal_to: 12, greater_than: 1}})
 
       check all value <- generator do
         assert value == 12
@@ -60,7 +76,7 @@ defmodule ExopProps.ParamsGenerator.IntegerTest do
     end
 
     property "greater_than & less_than" do
-      generator = generate(numericality: %{greater_than: 1, less_than: 3})
+      generator = generate(%{numericality: %{greater_than: 1, less_than: 3}})
 
       check all value <- generator do
         assert value > 1
@@ -69,7 +85,7 @@ defmodule ExopProps.ParamsGenerator.IntegerTest do
     end
 
     property "greater_than_or_equal_to & less_than" do
-      generator = generate(numericality: %{greater_than_or_equal_to: 1, less_than: 3})
+      generator = generate(%{numericality: %{greater_than_or_equal_to: 1, less_than: 3}})
 
       check all value <- generator do
         assert value >= 1
@@ -78,7 +94,8 @@ defmodule ExopProps.ParamsGenerator.IntegerTest do
     end
 
     property "greater_than_or_equal_to & less_than_or_equal_to" do
-      generator = generate(numericality: %{greater_than_or_equal_to: 1, less_than_or_equal_to: 3})
+      generator =
+        generate(%{numericality: %{greater_than_or_equal_to: 1, less_than_or_equal_to: 3}})
 
       check all value <- generator do
         assert value >= 1
@@ -87,7 +104,7 @@ defmodule ExopProps.ParamsGenerator.IntegerTest do
     end
 
     property "greater_than & less_than_or_equal_to" do
-      generator = generate(numericality: %{greater_than: 1, less_than_or_equal_to: 3})
+      generator = generate(%{numericality: %{greater_than: 1, less_than_or_equal_to: 3}})
 
       check all value <- generator do
         assert value > 1

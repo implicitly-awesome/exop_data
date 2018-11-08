@@ -7,5 +7,5 @@ defmodule ExopProps.ParamsGenerator.Generator do
   and returns StreamData generator made with respect to the options.
   """
 
-  @callback generate(keyword()) :: StreamData.t()
+  @callback generate(map()) :: StreamData.t()
 end
