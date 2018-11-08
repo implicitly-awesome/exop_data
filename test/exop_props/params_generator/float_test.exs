@@ -51,6 +51,14 @@ defmodule ExopProps.ParamsGenerator.FloatTest do
       end
     end
 
+    property "min" do
+      generator = generate(%{numericality: %{min: 1.0}})
+
+      check all value <- generator do
+        assert value >= 1.0
+      end
+    end
+
     property "less_than" do
       generator = generate(%{numericality: %{less_than: 1.0}})
 
@@ -61,6 +69,14 @@ defmodule ExopProps.ParamsGenerator.FloatTest do
 
     property "less_than_or_equal_to" do
       generator = generate(%{numericality: %{less_than_or_equal_to: 1.0}})
+
+      check all value <- generator do
+        assert value <= 1.0
+      end
+    end
+
+    property "max" do
+      generator = generate(%{numericality: %{max: 1.0}})
 
       check all value <- generator do
         assert value <= 1.0

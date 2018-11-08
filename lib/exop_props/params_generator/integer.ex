@@ -17,6 +17,20 @@ defmodule ExopProps.ParamsGenerator.Integer do
 
   defp do_generate(%{is: exact}), do: constant(exact)
 
+  defp do_generate(%{min: min} = contract) do
+    contract
+    |> Map.delete(:min)
+    |> Map.put(:greater_than_or_equal_to, min)
+    |> do_generate()
+  end
+
+  defp do_generate(%{max: max} = contract) do
+    contract
+    |> Map.delete(:max)
+    |> Map.put(:less_than_or_equal_to, max)
+    |> do_generate()
+  end
+
   defp do_generate(%{greater_than: min, less_than: max}) do
     in_range(min + 1, max - 1)
   end

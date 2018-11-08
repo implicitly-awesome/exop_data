@@ -15,6 +15,20 @@ defmodule ExopProps.ParamsGenerator.Float do
 
   defp do_generate(%{is: exact}), do: constant(exact)
 
+  defp do_generate(%{min: min} = contract) do
+    contract
+    |> Map.delete(:min)
+    |> Map.put(:greater_than_or_equal_to, min)
+    |> do_generate()
+  end
+
+  defp do_generate(%{max: max} = contract) do
+    contract
+    |> Map.delete(:max)
+    |> Map.put(:less_than_or_equal_to, max)
+    |> do_generate()
+  end
+
   defp do_generate(%{greater_than: greater_than, less_than: less_than}) do
     StreamData.filter(
       StreamData.float(min: greater_than - @diff, max: less_than + @diff),
