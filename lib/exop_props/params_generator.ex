@@ -5,7 +5,7 @@ defmodule ExopProps.ParamsGenerator do
 
   use ExUnitProperties
 
-  alias ExopProps.ParamsGenerator.CommonFilters
+  alias ExopProps.CommonFilters
 
   @doc """
   Returns a StreamData generator for either an Exop operation or a contract.
@@ -58,7 +58,9 @@ defmodule ExopProps.ParamsGenerator do
       |> Module.concat()
 
     if Code.ensure_compiled?(generator_module) do
-      generator_module |> apply(:generate, [param_opts]) |> CommonFilters.filter(param_opts)
+      generator_module
+      |> apply(:generate, [param_opts])
+      |> CommonFilters.filter(param_opts)
     else
       raise("""
       ExopProps: there is no generator for params of type :#{param_type},
@@ -84,7 +86,11 @@ defmodule ExopProps.ParamsGenerator do
     |> resolve_opts()
   end
 
+  @spec resolve_exact(any()) :: StreamData.t()
   defp resolve_exact(value), do: StreamData.constant(value)
 
-  defp resolve_in_list(in_list) when is_list(in_list), do: StreamData.member_of(in_list)
+  @spec resolve_in_list([any()]) :: StreamData.t() | nil
+  def resolve_in_list(in_list) when is_list(in_list), do: StreamData.member_of(in_list)
+
+  def resolve_in_list(_), do: nil
 end

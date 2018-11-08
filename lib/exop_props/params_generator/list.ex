@@ -27,8 +27,10 @@ defmodule ExopProps.ParamsGenerator.List do
   defp list_item(opts) do
     opts = opts |> Map.get(:list_item, %{}) |> Enum.into(%{})
 
-    if Enum.any?(opts),
-      do: ParamsGenerator.resolve_opts(opts),
-      else: StreamData.atom(:alphanumeric)
+    if Enum.any?(opts) do
+      ParamsGenerator.resolve_opts(opts)
+    else
+      StreamData.atom(:alphanumeric)
+    end
   end
 end
