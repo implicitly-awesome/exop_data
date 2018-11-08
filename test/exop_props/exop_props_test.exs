@@ -20,16 +20,18 @@ defmodule ExopPropsTest do
     parameter(:b, type: :string)
 
     def process(params) do
-      params[:a] <> params[:b]
+      params
+      |> Map.values()
+      |> Enum.join()
     end
   end
 
   defmodule Common do
     use Exop.Operation
 
-    parameter(:a, exactly: :aaa)
-    parameter(:b, in: [:bb, :bbb, :bbbb])
-    parameter(:c, type: :atom, not_in: [:a, :b, :c])
+    parameter(:a, required: true, exactly: :aaa)
+    parameter(:b, required: true, in: [:bb, :bbb, :bbbb])
+    parameter(:c, required: true, type: :atom, not_in: [:a, :b, :c])
 
     def process(params), do: params
   end
@@ -39,7 +41,7 @@ defmodule ExopPropsTest do
 
     parameter(:a, type: :string, format: ~r/@/)
 
-    def process(%{a: a}), do: a
+    def process(params), do: params
   end
 
   test "Custom generator" do
@@ -52,8 +54,8 @@ defmodule ExopPropsTest do
         name <> "@" <> domain
       end
 
-    check all %{a: a} = params <- exop_props(Format, generators: %{a: email_generator}) do
-      assert a == Format.run!(params)
+    check all params <- exop_props(Format, generators: %{a: email_generator}) do
+      assert params == Format.run!(params)
     end
   end
 
@@ -66,9 +68,9 @@ defmodule ExopPropsTest do
   end
 
   property "Concatenate" do
-    check all %{a: a, b: b} = params <- exop_props(Concatenate) do
+    check all params <- exop_props(Concatenate) do
       result = Concatenate.run!(params)
-      expected_result = a <> b
+      expected_result = params |> Map.values() |> Enum.join()
       assert result == expected_result
     end
   end

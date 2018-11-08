@@ -5,21 +5,24 @@ defmodule ExopProps.ParamsGenerator do
 
   use ExUnitProperties
 
-  alias ExopProps.CommonFilters
+  alias ExopProps.{CommonFilters, CommonGenerators}
 
   @doc """
   Returns a StreamData generator for either an Exop operation or a contract.
   """
   @spec generate_for(module() | ExopProps.contract(), keyword()) :: StreamData.t()
-  def generate_for(contract, opts) when is_list(contract) do
-    contract
-    |> Enum.into(%{}, &generator_for_param(&1, opts))
-    |> StreamData.fixed_map()
-  end
-
   def generate_for(operation, opts) when is_atom(operation) do
     {:module, operation} = Code.ensure_compiled(operation)
     generate_for(operation.contract(), opts)
+  end
+
+  def generate_for(contract, opts) when is_list(contract) do
+    required_keys = required_fields(contract)
+    optional_keys = optional_fields(contract)
+
+    contract
+    |> Enum.into(%{}, &generator_for_param(&1, opts))
+    |> CommonGenerators.map(required_keys, optional_keys)
   end
 
   def generate_for(_) do
@@ -69,6 +72,20 @@ defmodule ExopProps.ParamsGenerator do
     end
   end
 
+  defp required_fields(contract) do
+    contract
+    |> Stream.filter(&Keyword.get(&1.opts, :required, false))
+    |> Stream.map(& &1.name)
+    |> Enum.to_list()
+  end
+
+  defp optional_fields(contract) do
+    contract
+    |> Stream.reject(&Keyword.get(&1.opts, :required, false))
+    |> Stream.map(& &1.name)
+    |> Enum.to_list()
+  end
+
   defp generator_for_param(%{name: param_name, opts: param_opts}, opts) do
     generators = Keyword.get(opts, :generators, %{})
     param_generator = Map.get(generators, param_name)
@@ -86,11 +103,7 @@ defmodule ExopProps.ParamsGenerator do
     |> resolve_opts()
   end
 
-  @spec resolve_exact(any()) :: StreamData.t()
   defp resolve_exact(value), do: StreamData.constant(value)
 
-  @spec resolve_in_list([any()]) :: StreamData.t() | nil
-  def resolve_in_list(in_list) when is_list(in_list), do: StreamData.member_of(in_list)
-
-  def resolve_in_list(_), do: nil
+  defp resolve_in_list(in_list) when is_list(in_list), do: StreamData.member_of(in_list)
 end
