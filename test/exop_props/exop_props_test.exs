@@ -143,4 +143,54 @@ defmodule ExopPropsTest do
       end
     end
   end
+
+  defmodule Format do
+    use Exop.Operation
+
+    parameter(:a, type: :string, format: ~r/@/)
+
+    def process(params), do: params
+  end
+
+  defmodule TestInner do
+    use Exop.Operation
+
+    parameter :a, type: :map, required: true, inner: %{b: [type: :atom, required: true]}
+
+    def process(params), do: params
+  end
+
+  describe "Custom generator option" do
+    property "simple" do
+      domains = ["gmail.com", "hotmail.com", "yahoo.com"]
+
+      email_generator =
+        gen all name <- StreamData.string(:alphanumeric),
+                name != "",
+                domain <- StreamData.member_of(domains) do
+          name <> "@" <> domain
+        end
+
+      check all params <- exop_props(Format, generators: %{a: email_generator}) do
+        assert params == Format.run!(params)
+      end
+    end
+
+    property "with :inner" do
+      map_generator = StreamData.constant(%{b: :atom})
+
+      check all params <- exop_props(TestInner, generators: %{a: map_generator}) do
+        %{a: %{b: :atom}} = TestInner.run!(params)
+      end
+    end
+
+    # TODO:
+    # property "with nested inner" do
+    #   map_generator = StreamData.constant(:atom)
+
+    #   check all params <- exop_props(TestInner, generators: %{b: map_generator}) do
+    #     %{a: %{b: :atom}} = TestInner.run!(params)
+    #   end
+    # end
+  end
 end
