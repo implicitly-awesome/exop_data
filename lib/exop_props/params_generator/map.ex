@@ -44,9 +44,9 @@ defmodule ExopProps.ParamsGenerator.Map do
       %{is: exact} -> [length: exact]
       %{equals: exact} -> [length: exact]
       %{equal_to: exact} -> [length: exact]
+      %{min: min, max: max} -> [min_length: min, max_length: max]
       %{min: min} -> [min_length: min]
       %{max: max} -> [max_length: max]
-      %{min: min, max: max} -> [min_length: min, max_length: max]
       %{in: min..max} -> [min_length: min, max_length: max]
       _ -> []
     end
@@ -93,7 +93,7 @@ defmodule ExopProps.ParamsGenerator.Map do
     Enum.random(1..(max_length - inner_params_amount))
   end
 
-  defp inner_params_amount_to_add(%{min: min_length}, inner_params_amount) do
+  defp inner_params_amount_to_add(%{min: min_length}, _inner_params_amount) do
     Enum.random(min_length..(min_length + @inner_params_amount_delta))
   end
 end
