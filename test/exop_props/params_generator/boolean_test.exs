@@ -1,5 +1,5 @@
 defmodule ExopProps.ParamsGenerator.BooleanTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case, async: true
   import ExUnitProperties
 
   import ExopProps.ParamsGenerator.Boolean, only: [generate: 1]

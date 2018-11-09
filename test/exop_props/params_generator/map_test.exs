@@ -1,5 +1,5 @@
 defmodule ExopProps.ParamsGenerator.MapTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case, async: true
   use ExUnitProperties
 
   import ExopProps.ParamsGenerator.Map, only: [generate: 1]

@@ -1,5 +1,5 @@
 defmodule ExopProps.ParamsGenerator.IntegerTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case, async: true
   use ExUnitProperties
 
   import ExopProps.ParamsGenerator.Integer, only: [generate: 1]

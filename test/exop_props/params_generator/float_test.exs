@@ -1,5 +1,5 @@
 defmodule ExopProps.ParamsGenerator.FloatTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case, async: true
   use ExUnitProperties
 
   import ExopProps.ParamsGenerator.Float, only: [generate: 1]

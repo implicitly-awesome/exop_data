@@ -42,14 +42,14 @@ defmodule ExopProps.ParamsGenerator do
   def resolve_opts(%{in: values}), do: resolve_in_list(values)
 
   def resolve_opts(param_opts) when is_map(param_opts) do
-    param_type = Map.get(param_opts, :type, :term)
+    param_type = param_type(param_opts)
 
     param_opts =
-      if param_type == :struct && Map.get(param_opts, :struct) do
+      if Map.get(param_opts, :struct) do
         %struct_module{} = Map.get(param_opts, :struct)
         Map.put(param_opts, :struct_module, struct_module)
       else
-        Map.put(param_opts, :type, :map)
+        param_opts
       end
 
     generator_module =
@@ -70,6 +70,12 @@ defmodule ExopProps.ParamsGenerator do
       """)
     end
   end
+
+  defp param_type(%{struct: %_{}}), do: :struct
+
+  defp param_type(%{type: type}), do: type
+
+  defp param_type(_), do: :term
 
   @spec optional_fields([map()]) :: [atom()]
   defp optional_fields(contract) do

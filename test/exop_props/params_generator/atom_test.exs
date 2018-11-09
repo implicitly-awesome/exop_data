@@ -1,5 +1,5 @@
 defmodule ExopProps.ParamsGenerator.AtomTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case, async: true
   import ExUnitProperties
 
   import ExopProps.ParamsGenerator.Atom, only: [generate: 1]

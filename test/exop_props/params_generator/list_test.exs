@@ -1,5 +1,5 @@
 defmodule ExopProps.ParamsGenerator.ListTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case, async: true
   use ExUnitProperties
 
   import ExopProps.ParamsGenerator.List, only: [generate: 1]

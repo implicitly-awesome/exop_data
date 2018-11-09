@@ -1,5 +1,5 @@
 defmodule ExopProps.CommonFiltersTest do
-  use ExUnit.Case, async: false
+  use ExUnit.Case, async: true
   use ExopProps
 
   describe "allow_nil" do
