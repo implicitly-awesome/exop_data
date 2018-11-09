@@ -118,4 +118,29 @@ defmodule ExopPropsTest do
       end
     end
   end
+
+  describe "map type with inner opts" do
+    property "simple" do
+      defmodule TestOp do
+        use Exop.Operation
+
+        parameter(:a,
+          type: :map,
+          required: true,
+          inner: %{
+            b: [type: :integer, required: true],
+            c: [type: :string, required: true]
+          }
+        )
+
+        def process(params), do: params
+      end
+
+      check all params <- exop_props(TestOp) do
+        %{a: %{b: b, c: c}} = TestOp.run!(params)
+        assert is_integer(b)
+        assert is_binary(c)
+      end
+    end
+  end
 end

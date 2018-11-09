@@ -60,7 +60,102 @@ defmodule ExopProps.ParamsGenerator.MapTest do
     end
   end
 
+  @inner_opts_simple %{
+    inner: %{
+      a: [
+        type: :integer,
+        required: true
+      ],
+      b: [
+        type: :string,
+        required: true
+      ]
+    }
+  }
+
   describe "with :inner option" do
-    # TODO:
+    property "simple" do
+      generator = generate(@inner_opts_simple)
+
+      check all value <- generator do
+        %{a: a, b: b} = value
+        assert is_integer(a)
+        assert is_binary(b)
+      end
+    end
+
+    property "with :min length" do
+      generator = @inner_opts_simple |> Map.put(:length, %{min: 4}) |> generate()
+
+      check all value <- generator do
+        %{a: a, b: b} = value
+        assert is_integer(a)
+        assert is_binary(b)
+        assert Enum.count(value) >= 4
+      end
+    end
+
+    property "with :max length" do
+      generator = @inner_opts_simple |> Map.put(:length, %{max: 4}) |> generate()
+
+      check all value <- generator do
+        %{a: a, b: b} = value
+        assert is_integer(a)
+        assert is_binary(b)
+        assert Enum.count(value) <= 4
+      end
+    end
+
+    property "with :in length" do
+      generator = @inner_opts_simple |> Map.put(:length, %{in: 3..5}) |> generate()
+
+      check all value <- generator do
+        %{a: a, b: b} = value
+        assert is_integer(a)
+        assert is_binary(b)
+        assert Enum.count(value) >= 3
+        assert Enum.count(value) <= 5
+      end
+    end
+
+    property "with :min & max length" do
+      generator = @inner_opts_simple |> Map.put(:length, %{min: 3, max: 5}) |> generate()
+
+      check all value <- generator do
+        %{a: a, b: b} = value
+        assert is_integer(a)
+        assert is_binary(b)
+        assert Enum.count(value) >= 3
+        assert Enum.count(value) <= 5
+      end
+    end
+
+    property "with embedded inner" do
+      generator =
+        generate(%{
+          inner: %{
+            a: [
+              type: :map,
+              required: true,
+              inner: %{
+                c: [
+                  required: true,
+                  type: :atom
+                ]
+              }
+            ],
+            b: [
+              required: true,
+              type: :string
+            ]
+          }
+        })
+
+      check all value <- generator do
+        %{a: %{c: c}, b: b} = value
+        assert is_atom(c)
+        assert is_binary(b)
+      end
+    end
   end
 end
