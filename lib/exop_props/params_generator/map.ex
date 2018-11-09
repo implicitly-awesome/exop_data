@@ -25,7 +25,9 @@ defmodule ExopProps.ParamsGenerator.Map do
   defp do_generate(%{inner: _} = opts), do: inner(opts)
 
   defp do_generate(opts) do
-    StreamData.map_of(StreamData.term(), StreamData.term(), length_opts(opts))
+    [StreamData.binary(), StreamData.atom(:alphanumeric)]
+    |> StreamData.one_of()
+    |> StreamData.map_of(StreamData.binary(), length_opts(opts))
   end
 
   @spec inner(map()) :: StreamData.t()

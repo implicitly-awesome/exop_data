@@ -8,11 +8,6 @@ defmodule ExopProps.ParamsGenerator.MapTest do
     check all value <- generate(%{}) do
       assert is_map(value)
     end
-
-    # NOTE: this is extremly slow
-    # check all value <- StreamData.map_of(StreamData.term(), StreamData.term()) do
-    #   assert true
-    # end
   end
 
   describe "with :length option" do
@@ -43,7 +38,6 @@ defmodule ExopProps.ParamsGenerator.MapTest do
     end
 
     property "min" do
-      # NOTE: slow
       generator = generate(%{length: %{min: 5}})
 
       check all value <- generator do
@@ -171,7 +165,7 @@ defmodule ExopProps.ParamsGenerator.MapTest do
                   required: true,
                   inner: %{
                     d: [
-                      type: integer,
+                      type: :integer,
                       required: true,
                       numericality: %{
                         min: 5,
@@ -190,7 +184,6 @@ defmodule ExopProps.ParamsGenerator.MapTest do
         })
 
       check all value <- generator do
-        IO.inspect(value)
         %{a: %{c: %{d: d}}, b: b} = value
         assert is_integer(d)
         assert d >= 5
