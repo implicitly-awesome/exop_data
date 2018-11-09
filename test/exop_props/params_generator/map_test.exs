@@ -157,5 +157,46 @@ defmodule ExopProps.ParamsGenerator.MapTest do
         assert is_binary(b)
       end
     end
+
+    property "with embedded inner 2" do
+      generator =
+        generate(%{
+          inner: %{
+            a: [
+              type: :map,
+              required: true,
+              inner: %{
+                c: [
+                  type: :map,
+                  required: true,
+                  inner: %{
+                    d: [
+                      type: integer,
+                      required: true,
+                      numericality: %{
+                        min: 5,
+                        max: 10
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            b: [
+              required: true,
+              type: :string
+            ]
+          }
+        })
+
+      check all value <- generator do
+        IO.inspect(value)
+        %{a: %{c: %{d: d}}, b: b} = value
+        assert is_integer(d)
+        assert d >= 5
+        assert d <= 10
+        assert is_binary(b)
+      end
+    end
   end
 end
