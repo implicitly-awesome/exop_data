@@ -13,9 +13,12 @@ defmodule ExopProps.ParamsGenerator.List do
     StreamData.list_of(list_item(opts), length_opts(opts))
   end
 
+  @spec length_opts(map()) :: StreamData.t()
   defp length_opts(opts) do
     case Map.get(opts, :length) do
       %{is: exact} -> [length: exact]
+      %{equals: exact} -> [length: exact]
+      %{equal_to: exact} -> [length: exact]
       %{in: min..max} -> [min_length: min, max_length: max]
       %{min: min, max: max} -> [min_length: min, max_length: max]
       %{min: min} -> [min_length: min]
@@ -24,6 +27,7 @@ defmodule ExopProps.ParamsGenerator.List do
     end
   end
 
+  @spec list_item(map()) :: StreamData.t()
   defp list_item(opts) do
     opts = opts |> Map.get(:list_item, %{}) |> Enum.into(%{})
 
