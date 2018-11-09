@@ -1,0 +1,53 @@
+defmodule StructWithTypespecs do
+  @type t :: %__MODULE__{
+          atom: atom(),
+          map: map(),
+          tuple: tuple(),
+          binary: binary(),
+          integer: integer(),
+          float: float(),
+          boolean: boolean(),
+          list: list(),
+          iodata: iodata(),
+          iolist: iolist(),
+          bitstring: bitstring(),
+          number: number(),
+          neg_integer: neg_integer(),
+          non_neg_integer: non_neg_integer(),
+          pos_integer: pos_integer(),
+          byte: byte(),
+          arity: arity(),
+          node: node(),
+          pid: pid(),
+          any: any(),
+          term: term(),
+          module: module(),
+          maybe_improper_list: maybe_improper_list()
+        }
+
+  defstruct [
+    :atom,
+    :map,
+    :tuple,
+    :binary,
+    :integer,
+    :float,
+    :boolean,
+    :list,
+    :iodata,
+    :bitstring,
+    :iolist,
+    :number,
+    :neg_integer,
+    :non_neg_integer,
+    :pos_integer,
+    :byte,
+    :arity,
+    :node,
+    :pid,
+    :any,
+    :term,
+    :module,
+    :maybe_improper_list
+  ]
+end

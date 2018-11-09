@@ -14,6 +14,7 @@ defmodule ExopProps.Mixfile do
       description: @description,
       package: package(),
       deps: deps(),
+      elixirc_paths: elixirc_paths(Mix.env()),
       source_url: "https://github.com/madeinussr/exop_props",
       docs: [extras: ["README.md"]],
       build_embedded: Mix.env() == :prod,
@@ -26,6 +27,9 @@ defmodule ExopProps.Mixfile do
       applications: [:logger, :stream_data]
     ]
   end
+
+  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(_), do: ["lib"]
 
   defp deps do
     [
