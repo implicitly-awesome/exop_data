@@ -117,118 +117,114 @@ defmodule ExopProps.ParamsGenerator.ListTest do
       end
     end
 
-    # property "with :min length" do
-    #   generator = @inner_opts_simple |> Map.put(:length, %{min: 4}) |> generate()
+    property "with :min length" do
+      generator = @inner_opts_simple |> Map.put(:length, %{min: 4}) |> generate()
 
-    #   check all value <- generator do
-    #     %{a: a, b: b} = value
-    #     assert is_integer(a)
-    #     assert is_binary(b)
-    #     assert Enum.count(value) >= 4
-    #   end
-    # end
+      check all value <- generator do
+        assert value |> Keyword.get(:a) |> is_integer()
+        assert value |> Keyword.get(:b) |> is_binary()
+        assert Enum.count(value) >= 4
+      end
+    end
 
-    # property "with :max length" do
-    #   generator = @inner_opts_simple |> Map.put(:length, %{max: 4}) |> generate()
+    property "with :max length" do
+      generator = @inner_opts_simple |> Map.put(:length, %{max: 4}) |> generate()
 
-    #   check all value <- generator do
-    #     %{a: a, b: b} = value
-    #     assert is_integer(a)
-    #     assert is_binary(b)
-    #     assert Enum.count(value) <= 4
-    #   end
-    # end
+      check all value <- generator do
+        assert value |> Keyword.get(:a) |> is_integer()
+        assert value |> Keyword.get(:b) |> is_binary()
+        assert Enum.count(value) <= 4
+      end
+    end
 
-    # property "with :in length" do
-    #   generator = @inner_opts_simple |> Map.put(:length, %{in: 3..5}) |> generate()
+    property "with :in length" do
+      generator = @inner_opts_simple |> Map.put(:length, %{in: 3..5}) |> generate()
 
-    #   check all value <- generator do
-    #     %{a: a, b: b} = value
-    #     assert is_integer(a)
-    #     assert is_binary(b)
-    #     assert Enum.count(value) >= 3
-    #     assert Enum.count(value) <= 5
-    #   end
-    # end
+      check all value <- generator do
+        assert value |> Keyword.get(:a) |> is_integer()
+        assert value |> Keyword.get(:b) |> is_binary()
+        assert Enum.count(value) >= 3
+        assert Enum.count(value) <= 5
+      end
+    end
 
-    # property "with :min & max length" do
-    #   generator = @inner_opts_simple |> Map.put(:length, %{min: 3, max: 5}) |> generate()
+    property "with :min & max length" do
+      generator = @inner_opts_simple |> Map.put(:length, %{min: 3, max: 5}) |> generate()
 
-    #   check all value <- generator do
-    #     %{a: a, b: b} = value
-    #     assert is_integer(a)
-    #     assert is_binary(b)
-    #     assert Enum.count(value) >= 3
-    #     assert Enum.count(value) <= 5
-    #   end
-    # end
+      check all value <- generator do
+        assert value |> Keyword.get(:a) |> is_integer()
+        assert value |> Keyword.get(:b) |> is_binary()
+        assert Enum.count(value) >= 3
+        assert Enum.count(value) <= 5
+      end
+    end
 
-    # property "with embedded inner" do
-    #   generator =
-    #     generate(%{
-    #       inner: %{
-    #         a: [
-    #           type: :map,
-    #           required: true,
-    #           inner: %{
-    #             c: [
-    #               required: true,
-    #               type: :atom
-    #             ]
-    #           }
-    #         ],
-    #         b: [
-    #           required: true,
-    #           type: :string
-    #         ]
-    #       }
-    #     })
+    property "with embedded inner" do
+      generator =
+        generate(%{
+          inner: %{
+            a: [
+              type: :map,
+              required: true,
+              inner: %{
+                c: [
+                  required: true,
+                  type: :atom
+                ]
+              }
+            ],
+            b: [
+              required: true,
+              type: :string
+            ]
+          }
+        })
 
-    #   check all value <- generator do
-    #     %{a: %{c: c}, b: b} = value
-    #     assert is_atom(c)
-    #     assert is_binary(b)
-    #   end
-    # end
+      check all value <- generator do
+        [{:a, %{c: c}}, {:b, b}] = value
+        assert is_atom(c)
+        assert is_binary(b)
+      end
+    end
 
-    # property "with embedded inner 2" do
-    #   generator =
-    #     generate(%{
-    #       inner: %{
-    #         a: [
-    #           type: :map,
-    #           required: true,
-    #           inner: %{
-    #             c: [
-    #               type: :map,
-    #               required: true,
-    #               inner: %{
-    #                 d: [
-    #                   type: :integer,
-    #                   required: true,
-    #                   numericality: %{
-    #                     min: 5,
-    #                     max: 10
-    #                   }
-    #                 ]
-    #               }
-    #             ]
-    #           }
-    #         ],
-    #         b: [
-    #           required: true,
-    #           type: :string
-    #         ]
-    #       }
-    #     })
+    property "with embedded inner 2" do
+      generator =
+        generate(%{
+          inner: %{
+            a: [
+              type: :map,
+              required: true,
+              inner: %{
+                c: [
+                  type: :map,
+                  required: true,
+                  inner: %{
+                    d: [
+                      type: :integer,
+                      required: true,
+                      numericality: %{
+                        min: 5,
+                        max: 10
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            b: [
+              required: true,
+              type: :string
+            ]
+          }
+        })
 
-    #   check all value <- generator do
-    #     %{a: %{c: %{d: d}}, b: b} = value
-    #     assert is_integer(d)
-    #     assert d >= 5
-    #     assert d <= 10
-    #     assert is_binary(b)
-    #   end
-    # end
+      check all value <- generator do
+        [{:a, %{c: %{d: d}}}, {:b, b}] = value
+        assert is_integer(d)
+        assert d >= 5
+        assert d <= 10
+        assert is_binary(b)
+      end
+    end
   end
 end
