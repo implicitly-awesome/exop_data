@@ -3,15 +3,26 @@ defmodule ExopProps.ParamsGenerator.List do
   Implements ExopProps generators behaviour for `list` parameter type.
   """
 
-  use ExopProps
+  @behaviour ExopProps.ParamsGenerator.Generator
+
+  import ExopProps.InnerResolver
 
   alias ExopProps.ParamsGenerator
 
-  @behaviour ExopProps.ParamsGenerator.Generator
+  def generate(opts \\ %{})
 
-  def generate(opts \\ %{}) do
-    StreamData.list_of(list_item(opts), length_opts(opts))
+  def generate(opts) when is_list(opts), do: opts |> Enum.into(%{}) |> generate()
+
+  def generate(%{inner: _} = opts) do
+    opts |> Map.put(:inner, resolve_inner_opts(opts)) |> do_generate()
   end
+
+  def generate(opts), do: do_generate(opts)
+
+  @spec do_generate(map()) :: StreamData.t()
+  defp do_generate(%{inner: _} = opts), do: StreamData.map(generator(opts), &Enum.into(&1, []))
+
+  defp do_generate(opts), do: StreamData.list_of(list_item(opts), length_opts(opts))
 
   @spec length_opts(map()) :: StreamData.t()
   defp length_opts(opts) do

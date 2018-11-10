@@ -51,7 +51,5 @@ defmodule ExopProps.InnerResolver do
     |> Enum.into(%{})
     |> Enum.map(fn {param_name, param_opts} -> %{name: param_name, opts: param_opts} end)
     |> ParamsGenerator.generate_for([])
-
-    # StreamData.map(generator, fn(map) -> Enum.into(map, []) end)
   end
 end
