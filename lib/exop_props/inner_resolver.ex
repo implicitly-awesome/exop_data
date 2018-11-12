@@ -9,6 +9,10 @@ defmodule ExopProps.InnerResolver do
 
   defguard has_inner(value) when is_map(value) or (is_list(value) and length(value) > 0)
 
+  @doc """
+  Resolve :inner opts according to it's original checks.
+  Returns updated (if needed) :inner check's opts.
+  """
   @spec resolve_inner_opts(%{length: map(), inner: map()}) :: map()
   def resolve_inner_opts(%{length: length_opts, inner: inner_opts})
       when is_map(length_opts) and is_map(inner_opts) do
@@ -45,8 +49,11 @@ defmodule ExopProps.InnerResolver do
     Enum.random(min_length..(min_length + @inner_params_amount_delta))
   end
 
+  @doc """
+  Prepare StreamData generator depends on a parameter :inner check opts and opts given to ExopProps generator.
+  """
   @spec generator(map(), map()) :: StreamData.t()
-  def generator(%{inner: inner_opts} = opts, props_opts) when has_inner(inner_opts) do
+  def generator(%{inner: inner_opts}, props_opts) when has_inner(inner_opts) do
     inner_contract =
       inner_opts
       |> Enum.into(%{})
@@ -57,12 +64,13 @@ defmodule ExopProps.InnerResolver do
     ParamsGenerator.generate_for(inner_contract, props_opts)
   end
 
+  @spec resolve_custom_generators(map()) :: map()
   defp resolve_custom_generators(%{generators: generators} = props_opts) do
     custom_generators_next_level =
       generators
       |> Map.values()
-      |> Enum.filter(& is_map(&1))
-      |> Enum.reduce(%{}, fn (m, acc) -> Map.merge(acc, m) end)
+      |> Enum.filter(&is_map(&1))
+      |> Enum.reduce(%{}, fn m, acc -> Map.merge(acc, m) end)
 
     Map.put(props_opts, :generators, custom_generators_next_level)
   end

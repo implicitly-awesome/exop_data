@@ -13,16 +13,20 @@ defmodule ExopProps.ParamsGenerator do
   Returns a StreamData generator for either an Exop operation or a contract.
   """
   @spec generate_for(module() | ExopProps.contract(), keyword()) :: StreamData.t()
-  def generate_for(operation, opts) when is_atom(operation) do
-    {:module, operation} = Code.ensure_compiled(operation)
-    generate_for(operation.contract(), opts)
+  def generate_for(operation_or_contract, props_opts) when is_list(props_opts) do
+    generate_for(operation_or_contract, Enum.into(props_opts, %{}))
   end
 
-  def generate_for(contract, opts) when is_list(contract) do
+  def generate_for(operation, props_opts) when is_atom(operation) do
+    {:module, operation} = Code.ensure_compiled(operation)
+    generate_for(operation.contract(), props_opts)
+  end
+
+  def generate_for(contract, props_opts) when is_list(contract) do
     optional_keys = optional_fields(contract)
 
     contract
-    |> Enum.into(%{}, &generator_for_param(&1, opts))
+    |> Enum.into(%{}, &generator_for_param(&1, props_opts))
     |> CommonGenerators.map(optional_keys)
   end
 
@@ -34,20 +38,20 @@ defmodule ExopProps.ParamsGenerator do
   end
 
   @doc """
-  Returns a StreamData generator for parameter's opts.
+  Returns a StreamData generator for parameter's opts and props opts given to ExopProps generator.
   """
-  @spec resolve_opts(map(), map()) :: StreamData.t()
-  def resolve_opts(%{equals: value}, _opts), do: resolve_exact(value)
+  @spec generator_for_opts(map(), map()) :: StreamData.t()
+  def generator_for_opts(%{equals: value}, _props_opts), do: resolve_exact(value)
 
-  def resolve_opts(%{exactly: value}, _opts), do: resolve_exact(value)
+  def generator_for_opts(%{exactly: value}, _props_opts), do: resolve_exact(value)
 
-  def resolve_opts(%{in: values}, _opts), do: resolve_in_list(values)
+  def generator_for_opts(%{in: values}, _props_opts), do: resolve_in_list(values)
 
-  def resolve_opts(%{format: regex}, _opts), do: resolve_format(regex)
+  def generator_for_opts(%{format: regex}, _opts), do: resolve_format(regex)
 
-  def resolve_opts(%{regex: regex}, _opts), do: resolve_format(regex)
+  def generator_for_opts(%{regex: regex}, _opts), do: resolve_format(regex)
 
-  def resolve_opts(param_opts, opts) when is_map(param_opts) do
+  def generator_for_opts(param_opts, opts) when is_map(param_opts) do
     param_type = param_type(param_opts)
 
     param_opts =
@@ -77,6 +81,7 @@ defmodule ExopProps.ParamsGenerator do
     end
   end
 
+  @spec param_type(map()) :: atom()
   defp param_type(%{struct: %_{}}), do: :struct
 
   defp param_type(%{type: type}), do: type
@@ -91,26 +96,29 @@ defmodule ExopProps.ParamsGenerator do
     |> Enum.to_list()
   end
 
-  defp generator_for_param(%{name: param_name, opts: param_opts} = contract_item, opts) do
-    opts = Enum.into(opts, %{})
-    generators = Map.get(opts, :generators, %{})
+  @spec generator_for_param(ExopProps.contract_item(), map()) :: {atom(), StreamData.t()}
+  defp generator_for_param(%{name: param_name, opts: param_opts}, props_opts) do
+    generators = Map.get(props_opts, :generators, %{})
     param_generator = Map.get(generators, param_name)
 
     if is_generator?(param_generator) do
       {param_name, param_generator}
     else
-      {param_name, build_generator(param_opts, opts)}
+      {param_name, build_generator(param_opts, props_opts)}
     end
   end
 
-  defp build_generator(param_opts, opts) do
+  @spec build_generator(map(), map) :: StreamData.t()
+  defp build_generator(param_opts, props_opts) do
     param_opts
     |> Enum.into(%{})
-    |> resolve_opts(opts)
+    |> generator_for_opts(props_opts)
   end
 
+  @spec resolve_exact(any()) :: StreamData.t()
   defp resolve_exact(value), do: StreamData.constant(value)
 
+  @spec resolve_in_list(list()) :: StreamData.t()
   defp resolve_in_list(in_list) when is_list(in_list), do: StreamData.member_of(in_list)
 
   defp resolve_format(regex), do: Randex.stream(regex, mod: Randex.Generator.StreamData)

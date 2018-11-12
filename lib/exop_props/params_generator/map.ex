@@ -9,9 +9,11 @@ defmodule ExopProps.ParamsGenerator.Map do
 
   def generate(opts \\ %{}, props_opts \\ %{})
 
-  def generate(opts, props_opts) when is_list(opts), do: opts |> Enum.into(%{}) |> generate(props_opts)
+  def generate(opts, props_opts) when is_list(opts),
+    do: opts |> Enum.into(%{}) |> generate(props_opts)
 
-  def generate(opts, props_opts) when is_list(props_opts), do: generate(opts, Enum.into(props_opts, %{}))
+  def generate(opts, props_opts) when is_list(props_opts),
+    do: generate(opts, Enum.into(props_opts, %{}))
 
   def generate(%{inner: _} = opts, props_opts) do
     opts |> Map.put(:inner, resolve_inner_opts(opts)) |> do_generate(props_opts)

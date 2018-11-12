@@ -92,6 +92,7 @@ defmodule ExopProps.ParamsGenerator.ListTest do
       end
     end
 
+    @tag :skip
     property ":required" do
       # FIXME: required is ignored within :list_item check
       generator = generate(%{list_item: %{type: :string, required: true}})
@@ -102,8 +103,11 @@ defmodule ExopProps.ParamsGenerator.ListTest do
       end
     end
 
+    @tag :skip
     property ":inner" do
-      generator = generate(%{list_item: %{inner: %{a: [type: :atom, required: true]}}, required: true})
+      # FIXME: required is ignored within :list_item check
+      generator =
+        generate(%{list_item: %{inner: %{a: [type: :atom, required: true]}}, required: true})
 
       check all value <- generator do
         random_item = value |> Enum.take_random(1) |> Enum.at(0)

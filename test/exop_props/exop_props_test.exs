@@ -163,7 +163,11 @@ defmodule ExopPropsTest do
   defmodule TestInnerMap2 do
     use Exop.Operation
 
-    parameter(:a, type: :map, required: true, inner: %{b: [type: :map, required: true, inner: %{c: [type: :atom, required: true]}]})
+    parameter(:a,
+      type: :map,
+      required: true,
+      inner: %{b: [type: :map, required: true, inner: %{c: [type: :atom, required: true]}]}
+    )
 
     def process(params), do: params
   end
@@ -179,7 +183,11 @@ defmodule ExopPropsTest do
   defmodule TestInnerList2 do
     use Exop.Operation
 
-    parameter(:a, type: :list, required: true, inner: %{b: [type: :list, required: true, inner: %{c: [type: :atom, required: true]}]})
+    parameter(:a,
+      type: :list,
+      required: true,
+      inner: %{b: [type: :list, required: true, inner: %{c: [type: :atom, required: true]}]}
+    )
 
     def process(params), do: params
   end
@@ -209,7 +217,7 @@ defmodule ExopPropsTest do
     end
 
     property "List: with :inner" do
-      custom_generator = StreamData.constant([b: :atom])
+      custom_generator = StreamData.constant(b: :atom)
 
       check all params <- exop_props(TestInnerList, generators: %{a: custom_generator}) do
         %{a: [b: :atom]} = TestInnerList.run!(params)
@@ -235,7 +243,8 @@ defmodule ExopPropsTest do
     property "Map: with twice-nested inner" do
       custom_generator = StreamData.constant(:atom)
 
-      check all params <- exop_props(TestInnerMap2, generators: %{a: %{b: %{c: custom_generator}}}) do
+      check all params <-
+                  exop_props(TestInnerMap2, generators: %{a: %{b: %{c: custom_generator}}}) do
         %{a: %{b: %{c: :atom}}} = TestInnerMap2.run!(params)
       end
     end
@@ -243,7 +252,8 @@ defmodule ExopPropsTest do
     property "List: with twice-nested inner" do
       custom_generator = StreamData.constant(:atom)
 
-      check all params <- exop_props(TestInnerList2, generators: %{a: %{b: %{c: custom_generator}}}) do
+      check all params <-
+                  exop_props(TestInnerList2, generators: %{a: %{b: %{c: custom_generator}}}) do
         %{a: [b: [c: :atom]]} = TestInnerList2.run!(params)
       end
     end
