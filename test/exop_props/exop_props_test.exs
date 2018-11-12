@@ -248,36 +248,4 @@ defmodule ExopPropsTest do
       end
     end
   end
-
-  defmodule TestListItem do
-    use Exop.Operation
-
-    parameter(:a, type: :map, required: true, inner: %{b: [type: :atom, required: true]})
-    # FIXME: required is ignored
-    parameter(:b, type: :list, required: true, list_item: %{type: :atom, required: true})
-
-    parameter(:c,
-      type: :list,
-      required: true,
-      list_item: %{type: :map, required: true, inner: %{e: [type: :atom, required: true]}}
-    )
-
-    parameter(:d,
-      type: :list,
-      required: true,
-      list_item: %{type: :tuple},
-      inner: %{f: [type: :string, required: true]}
-    )
-
-    def process(params), do: params
-  end
-
-  property "sdf" do
-    # exop_props(TestListItem) |> Enum.take(5) |> IO.inspect()
-    # check all params <- exop_props(TestListItem) do
-    #   %{a: %{b: b, c: c}} = TestListItem.run!(params)
-    #   assert is_integer(b)
-    #   assert is_binary(c)
-    # end
-  end
 end
