@@ -30,7 +30,7 @@ defmodule ExopProps.ParamsGenerator do
     |> CommonGenerators.map(optional_keys)
   end
 
-  def generate_for(_) do
+  def generate_for(_, _) do
     raise("""
     ExopProps: please provide either an operation's contract
     or operation's module to make a generator
