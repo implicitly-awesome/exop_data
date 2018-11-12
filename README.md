@@ -138,8 +138,8 @@ In both cases the result will be the same: ExopProps takes either the explicit c
 the Operation module (and get it's contract under the hood) and generates a map, where keys are
 params defined in the contract.
 
-**NB**: `exop_props/2` imports `ExUnitProperties` so you don't need to include `use ExUnitProperties`
-in your tests.
+**NB**: `exop_props/2` imports `ExUnitProperties` so you don't need to include
+`use ExUnitProperties` in your tests.
 
 ### Data generating
 
@@ -155,12 +155,53 @@ contract = [
   %{name: :b, opts: [required: true, type: :integer, numericality: %{greater_than: 10}]}
 ]
 
-generator = ParamsGenerator.generate_for(contract)
+generator = ParamsGenerator.generate_for(contract, [])
 
-result = Enum.take(generator, 5)
+Enum.take(generator, 5)
+[
+  %{a: 3808, b: 3328},
+  %{a: 7116, b: 8348},
+  %{a: 3432, b: 7134},
+  %{a: 7024, b: 7941},
+  %{a: 7941, b: 6944}
+]
+```
+
+Or with an Exop Operation defined:
+
+```elixir
+defmodule MultiplyService do
+  use Exop.Operation
+
+  parameter(:a, required: true, type: :integer, numericality: %{greater_than: 0})
+  parameter(:b, required: true, type: :integer, numericality: %{greater_than: 10})
+
+  def process(%{a: a, b: b} = _params), do: a * b
+end
+
+alias ExopProps.ParamsGenerator
+
+generator = ParamsGenerator.generate_for(MultiplyService, [])
+
+Enum.take(generator, 5)
+[
+  %{a: 401, b: 2889},
+  %{a: 7786, b: 5894},
+  %{a: 9187, b: 1863},
+  %{a: 3537, b: 1285},
+  %{a: 6124, b: 5521}
+]
 ```
 
 ### `:required` check
+
+When it comes to data generating, by default, ExopProps behaves like this:
+if a parameter wasn't explicitly marked with a check `required: true` ExopProps generates
+that parameter occasionally (sometimes there is such parameter in generated data, sometimes not).
+The parameter and it's value will always be presented in the resulting map only if it was explicitly
+marked as required.
+
+It allows us to generate fair data with all possible corner-cases for provided contract.
 
 ## Special cases
 
