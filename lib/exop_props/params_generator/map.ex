@@ -7,20 +7,22 @@ defmodule ExopProps.ParamsGenerator.Map do
 
   import ExopProps.InnerResolver
 
-  def generate(opts \\ %{})
+  def generate(opts \\ %{}, props_opts \\ %{})
 
-  def generate(opts) when is_list(opts), do: opts |> Enum.into(%{}) |> generate()
+  def generate(opts, props_opts) when is_list(opts), do: opts |> Enum.into(%{}) |> generate(props_opts)
 
-  def generate(%{inner: _} = opts) do
-    opts |> Map.put(:inner, resolve_inner_opts(opts)) |> do_generate()
+  def generate(opts, props_opts) when is_list(props_opts), do: generate(opts, Enum.into(props_opts, %{}))
+
+  def generate(%{inner: _} = opts, props_opts) do
+    opts |> Map.put(:inner, resolve_inner_opts(opts)) |> do_generate(props_opts)
   end
 
-  def generate(opts), do: do_generate(opts)
+  def generate(opts, props_opts), do: do_generate(opts, props_opts)
 
-  @spec do_generate(map()) :: StreamData.t()
-  defp do_generate(%{inner: _} = opts), do: generator(opts)
+  @spec do_generate(map(), map()) :: StreamData.t()
+  defp do_generate(%{inner: _} = opts, props_opts), do: generator(opts, props_opts)
 
-  defp do_generate(opts) do
+  defp do_generate(opts, _props_opts) do
     [StreamData.binary(), StreamData.atom(:alphanumeric)]
     |> StreamData.one_of()
     |> StreamData.map_of(StreamData.binary(), length_opts(opts))

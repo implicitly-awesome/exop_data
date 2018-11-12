@@ -45,11 +45,27 @@ defmodule ExopProps.InnerResolver do
     Enum.random(min_length..(min_length + @inner_params_amount_delta))
   end
 
-  @spec generator(map()) :: StreamData.t()
-  def generator(%{inner: inner_opts}) when has_inner(inner_opts) do
-    inner_opts
-    |> Enum.into(%{})
-    |> Enum.map(fn {param_name, param_opts} -> %{name: param_name, opts: param_opts} end)
-    |> ParamsGenerator.generate_for([])
+  @spec generator(map(), map()) :: StreamData.t()
+  def generator(%{inner: inner_opts} = opts, props_opts) when has_inner(inner_opts) do
+    inner_contract =
+      inner_opts
+      |> Enum.into(%{})
+      |> Enum.map(fn {param_name, param_opts} -> %{name: param_name, opts: param_opts} end)
+
+    props_opts = resolve_custom_generators(props_opts)
+
+    ParamsGenerator.generate_for(inner_contract, props_opts)
   end
+
+  defp resolve_custom_generators(%{generators: generators} = props_opts) do
+    custom_generators_next_level =
+      generators
+      |> Map.values()
+      |> Enum.filter(& is_map(&1))
+      |> Enum.reduce(%{}, fn (m, acc) -> Map.merge(acc, m) end)
+
+    Map.put(props_opts, :generators, custom_generators_next_level)
+  end
+
+  defp resolve_custom_generators(props_opts), do: props_opts
 end

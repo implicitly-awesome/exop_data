@@ -7,7 +7,7 @@ defmodule ExopProps.ParamsGenerator.Integer do
 
   @diff 9999
 
-  def generate(opts \\ %{}) do
+  def generate(opts \\ %{}, _props_opts \\ %{}) do
     opts |> Map.get(:numericality) |> do_generate()
   end
 

@@ -152,10 +152,34 @@ defmodule ExopPropsTest do
     def process(params), do: params
   end
 
-  defmodule TestInner do
+  defmodule TestInnerMap do
     use Exop.Operation
 
     parameter(:a, type: :map, required: true, inner: %{b: [type: :atom, required: true]})
+
+    def process(params), do: params
+  end
+
+  defmodule TestInnerMap2 do
+    use Exop.Operation
+
+    parameter(:a, type: :map, required: true, inner: %{b: [type: :map, required: true, inner: %{c: [type: :atom, required: true]}]})
+
+    def process(params), do: params
+  end
+
+  defmodule TestInnerList do
+    use Exop.Operation
+
+    parameter(:a, type: :list, required: true, inner: %{b: [type: :atom, required: true]})
+
+    def process(params), do: params
+  end
+
+  defmodule TestInnerList2 do
+    use Exop.Operation
+
+    parameter(:a, type: :list, required: true, inner: %{b: [type: :list, required: true, inner: %{c: [type: :atom, required: true]}]})
 
     def process(params), do: params
   end
@@ -176,22 +200,53 @@ defmodule ExopPropsTest do
       end
     end
 
-    property "with :inner" do
-      map_generator = StreamData.constant(%{b: :atom})
+    property "Map: with :inner" do
+      custom_generator = StreamData.constant(%{b: :atom})
 
-      check all params <- exop_props(TestInner, generators: %{a: map_generator}) do
-        %{a: %{b: :atom}} = TestInner.run!(params)
+      check all params <- exop_props(TestInnerMap, generators: %{a: custom_generator}) do
+        %{a: %{b: :atom}} = TestInnerMap.run!(params)
       end
     end
 
-    # TODO:
-    # property "with nested inner" do
-    #   map_generator = StreamData.constant(:atom)
+    property "List: with :inner" do
+      custom_generator = StreamData.constant([b: :atom])
 
-    #   check all params <- exop_props(TestInner, generators: %{b: map_generator}) do
-    #     %{a: %{b: :atom}} = TestInner.run!(params)
-    #   end
-    # end
+      check all params <- exop_props(TestInnerList, generators: %{a: custom_generator}) do
+        %{a: [b: :atom]} = TestInnerList.run!(params)
+      end
+    end
+
+    property "Map: with nested inner" do
+      custom_generator = StreamData.constant(:atom)
+
+      check all params <- exop_props(TestInnerMap, generators: %{a: %{b: custom_generator}}) do
+        %{a: %{b: :atom}} = TestInnerMap.run!(params)
+      end
+    end
+
+    property "List: with nested inner" do
+      custom_generator = StreamData.constant(:atom)
+
+      check all params <- exop_props(TestInnerList, generators: %{a: %{b: custom_generator}}) do
+        %{a: [b: :atom]} = TestInnerList.run!(params)
+      end
+    end
+
+    property "Map: with twice-nested inner" do
+      custom_generator = StreamData.constant(:atom)
+
+      check all params <- exop_props(TestInnerMap2, generators: %{a: %{b: %{c: custom_generator}}}) do
+        %{a: %{b: %{c: :atom}}} = TestInnerMap2.run!(params)
+      end
+    end
+
+    property "List: with twice-nested inner" do
+      custom_generator = StreamData.constant(:atom)
+
+      check all params <- exop_props(TestInnerList2, generators: %{a: %{b: %{c: custom_generator}}}) do
+        %{a: [b: [c: :atom]]} = TestInnerList2.run!(params)
+      end
+    end
   end
 
   defmodule TestListItem do

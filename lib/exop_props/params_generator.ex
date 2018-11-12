@@ -5,6 +5,8 @@ defmodule ExopProps.ParamsGenerator do
 
   use ExUnitProperties
 
+  import ExopProps.Utils
+
   alias ExopProps.{CommonFilters, CommonGenerators}
 
   @doc """
@@ -34,18 +36,18 @@ defmodule ExopProps.ParamsGenerator do
   @doc """
   Returns a StreamData generator for parameter's opts.
   """
-  @spec resolve_opts(map()) :: StreamData.t()
-  def resolve_opts(%{equals: value}), do: resolve_exact(value)
+  @spec resolve_opts(map(), map()) :: StreamData.t()
+  def resolve_opts(%{equals: value}, _opts), do: resolve_exact(value)
 
-  def resolve_opts(%{exactly: value}), do: resolve_exact(value)
+  def resolve_opts(%{exactly: value}, _opts), do: resolve_exact(value)
 
-  def resolve_opts(%{in: values}), do: resolve_in_list(values)
+  def resolve_opts(%{in: values}, _opts), do: resolve_in_list(values)
 
-  def resolve_opts(%{format: regex}), do: resolve_format(regex)
+  def resolve_opts(%{format: regex}, _opts), do: resolve_format(regex)
 
-  def resolve_opts(%{regex: regex}), do: resolve_format(regex)
+  def resolve_opts(%{regex: regex}, _opts), do: resolve_format(regex)
 
-  def resolve_opts(param_opts) when is_map(param_opts) do
+  def resolve_opts(param_opts, opts) when is_map(param_opts) do
     param_type = param_type(param_opts)
 
     param_opts =
@@ -65,7 +67,7 @@ defmodule ExopProps.ParamsGenerator do
 
     if Code.ensure_compiled?(generator_module) do
       generator_module
-      |> apply(:generate, [param_opts])
+      |> apply(:generate, [param_opts, opts])
       |> CommonFilters.filter(param_opts)
     else
       raise("""
@@ -89,21 +91,22 @@ defmodule ExopProps.ParamsGenerator do
     |> Enum.to_list()
   end
 
-  defp generator_for_param(%{name: param_name, opts: param_opts}, opts) do
-    generators = Keyword.get(opts, :generators, %{})
+  defp generator_for_param(%{name: param_name, opts: param_opts} = contract_item, opts) do
+    opts = Enum.into(opts, %{})
+    generators = Map.get(opts, :generators, %{})
     param_generator = Map.get(generators, param_name)
 
-    if param_generator do
+    if is_generator?(param_generator) do
       {param_name, param_generator}
     else
       {param_name, build_generator(param_opts, opts)}
     end
   end
 
-  defp build_generator(param_opts, _opts) do
+  defp build_generator(param_opts, opts) do
     param_opts
     |> Enum.into(%{})
-    |> resolve_opts()
+    |> resolve_opts(opts)
   end
 
   defp resolve_exact(value), do: StreamData.constant(value)
