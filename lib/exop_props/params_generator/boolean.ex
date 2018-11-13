@@ -5,5 +5,5 @@ defmodule ExopProps.ParamsGenerator.Boolean do
 
   @behaviour ExopProps.ParamsGenerator.Generator
 
-  def generate(_opts \\ %{}), do: StreamData.boolean()
+  def generate(_opts \\ %{}, _props_opts \\ %{}), do: StreamData.boolean()
 end

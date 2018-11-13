@@ -3,9 +3,9 @@ defmodule ExopProps.ParamsGenerator.Generator do
   Defines ExopProps generators behaviour.
 
   An ExopProps's generator should define `generate/1` function
-  which takes a contract's parameter options (Keyword.t())
+  which takes a contract's parameter options with your property test options
   and returns StreamData generator made with respect to the options.
   """
 
-  @callback generate(map()) :: StreamData.t()
+  @callback generate(map(), map()) :: StreamData.t()
 end

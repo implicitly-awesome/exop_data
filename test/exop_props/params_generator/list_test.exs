@@ -54,10 +54,6 @@ defmodule ExopProps.ParamsGenerator.ListTest do
     end
   end
 
-  describe "with :inner option (for Keyword)" do
-    # TODO:
-  end
-
   describe "with :list_item option" do
     property ":type" do
       generator = generate(%{list_item: %{type: :integer}, length: %{min: 1}})
@@ -93,6 +89,165 @@ defmodule ExopProps.ParamsGenerator.ListTest do
         assert is_binary(random_item)
         assert String.length(random_item) >= 1
         assert String.length(random_item) <= 5
+      end
+    end
+
+    @tag :skip
+    property ":required" do
+      # FIXME: required is ignored within :list_item check
+      generator = generate(%{list_item: %{type: :string, required: true}})
+
+      check all value <- generator do
+        random_item = value |> Enum.take_random(1) |> Enum.at(0)
+        assert is_binary(random_item)
+      end
+    end
+
+    @tag :skip
+    property ":inner" do
+      # FIXME: required is ignored within :list_item check
+      generator =
+        generate(%{list_item: %{inner: %{a: [type: :atom, required: true]}}, required: true})
+
+      check all value <- generator do
+        random_item = value |> Enum.take_random(1) |> Enum.at(0)
+        %{a: a} = random_item
+        assert is_atom(a)
+      end
+    end
+  end
+
+  @inner_opts_simple %{
+    inner: %{
+      a: [
+        type: :integer,
+        required: true
+      ],
+      b: [
+        type: :string,
+        required: true
+      ]
+    }
+  }
+
+  describe "with :inner option (Keyword)" do
+    property "simple" do
+      generator = generate(@inner_opts_simple)
+
+      check all value <- generator do
+        [{:a, a}, {:b, b}] = value
+        assert is_integer(a)
+        assert is_binary(b)
+      end
+    end
+
+    property "with :min length" do
+      generator = @inner_opts_simple |> Map.put(:length, %{min: 4}) |> generate()
+
+      check all value <- generator do
+        assert value |> Keyword.get(:a) |> is_integer()
+        assert value |> Keyword.get(:b) |> is_binary()
+        assert Enum.count(value) >= 4
+      end
+    end
+
+    property "with :max length" do
+      generator = @inner_opts_simple |> Map.put(:length, %{max: 4}) |> generate()
+
+      check all value <- generator do
+        assert value |> Keyword.get(:a) |> is_integer()
+        assert value |> Keyword.get(:b) |> is_binary()
+        assert Enum.count(value) <= 4
+      end
+    end
+
+    property "with :in length" do
+      generator = @inner_opts_simple |> Map.put(:length, %{in: 3..5}) |> generate()
+
+      check all value <- generator do
+        assert value |> Keyword.get(:a) |> is_integer()
+        assert value |> Keyword.get(:b) |> is_binary()
+        assert Enum.count(value) >= 3
+        assert Enum.count(value) <= 5
+      end
+    end
+
+    property "with :min & max length" do
+      generator = @inner_opts_simple |> Map.put(:length, %{min: 3, max: 5}) |> generate()
+
+      check all value <- generator do
+        assert value |> Keyword.get(:a) |> is_integer()
+        assert value |> Keyword.get(:b) |> is_binary()
+        assert Enum.count(value) >= 3
+        assert Enum.count(value) <= 5
+      end
+    end
+
+    property "with embedded inner" do
+      generator =
+        generate(%{
+          inner: %{
+            a: [
+              type: :map,
+              required: true,
+              inner: %{
+                c: [
+                  required: true,
+                  type: :atom
+                ]
+              }
+            ],
+            b: [
+              required: true,
+              type: :string
+            ]
+          }
+        })
+
+      check all value <- generator do
+        [{:a, %{c: c}}, {:b, b}] = value
+        assert is_atom(c)
+        assert is_binary(b)
+      end
+    end
+
+    property "with embedded inner 2" do
+      generator =
+        generate(%{
+          inner: %{
+            a: [
+              type: :map,
+              required: true,
+              inner: %{
+                c: [
+                  type: :map,
+                  required: true,
+                  inner: %{
+                    d: [
+                      type: :integer,
+                      required: true,
+                      numericality: %{
+                        min: 5,
+                        max: 10
+                      }
+                    ]
+                  }
+                ]
+              }
+            ],
+            b: [
+              required: true,
+              type: :string
+            ]
+          }
+        })
+
+      check all value <- generator do
+        [{:a, %{c: %{d: d}}}, {:b, b}] = value
+        assert is_integer(d)
+        assert d >= 5
+        assert d <= 10
+        assert is_binary(b)
       end
     end
   end

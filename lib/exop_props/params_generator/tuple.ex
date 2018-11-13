@@ -5,7 +5,7 @@ defmodule ExopProps.ParamsGenerator.Tuple do
 
   @behaviour ExopProps.ParamsGenerator.Generator
 
-  def generate(_opts \\ %{}) do
+  def generate(_opts \\ %{}, _props_opts \\ %{}) do
     StreamData.tuple({StreamData.term(), StreamData.term()})
   end
 end

@@ -5,7 +5,7 @@ defmodule ExopProps.ParamsGenerator.String do
 
   @behaviour ExopProps.ParamsGenerator.Generator
 
-  def generate(opts \\ %{}) do
+  def generate(opts \\ %{}, _props_opts \\ %{}) do
     opts |> Map.get(:length) |> do_generate()
   end
 

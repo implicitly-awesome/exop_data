@@ -5,35 +5,44 @@ defmodule ExopProps.ParamsGenerator.Map do
 
   @behaviour ExopProps.ParamsGenerator.Generator
 
-  def generate(opts \\ %{}), do: opts |> Map.get(:length) |> do_generate()
+  import ExopProps.InnerResolver
 
-  defp do_generate(%{is: exact}) do
-    map(length: exact)
+  def generate(opts \\ %{}, props_opts \\ %{})
+
+  def generate(opts, props_opts) when is_list(opts),
+    do: opts |> Enum.into(%{}) |> generate(props_opts)
+
+  def generate(opts, props_opts) when is_list(props_opts),
+    do: generate(opts, Enum.into(props_opts, %{}))
+
+  def generate(%{inner: _} = opts, props_opts) do
+    opts |> Map.put(:inner, resolve_inner_opts(opts)) |> do_generate(props_opts)
   end
 
-  defp do_generate(%{in: min..max}) do
-    map(min_length: min, max_length: max)
-  end
+  def generate(opts, props_opts), do: do_generate(opts, props_opts)
 
-  defp do_generate(%{min: min, max: max}) do
-    map(min_length: min, max_length: max)
-  end
+  @spec do_generate(map(), map()) :: StreamData.t()
+  defp do_generate(%{inner: _} = opts, props_opts), do: generator(opts, props_opts)
 
-  defp do_generate(%{min: min}) do
-    map(min_length: min)
-  end
-
-  defp do_generate(%{max: max}) do
-    map(max_length: max)
-  end
-
-  defp do_generate(_) do
-    map()
-  end
-
-  defp map(opts \\ []) do
+  defp do_generate(opts, _props_opts) do
     [StreamData.binary(), StreamData.atom(:alphanumeric)]
     |> StreamData.one_of()
-    |> StreamData.map_of(StreamData.binary(), opts)
+    |> StreamData.map_of(StreamData.binary(), length_opts(opts))
   end
+
+  @spec length_opts(map()) :: StreamData.t()
+  defp length_opts(%{length: length_check}) do
+    case length_check do
+      %{is: exact} -> [length: exact]
+      %{equals: exact} -> [length: exact]
+      %{equal_to: exact} -> [length: exact]
+      %{min: min, max: max} -> [min_length: min, max_length: max]
+      %{min: min} -> [min_length: min]
+      %{max: max} -> [max_length: max]
+      %{in: min..max} -> [min_length: min, max_length: max]
+      _ -> []
+    end
+  end
+
+  defp length_opts(_), do: []
 end

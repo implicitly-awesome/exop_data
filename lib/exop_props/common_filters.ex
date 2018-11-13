@@ -3,8 +3,6 @@ defmodule ExopProps.CommonFilters do
   Defines filters which are common for different types.
   """
 
-  # TODO: required & default options
-
   @doc """
   Applies common filters to a generator (the first argument) which may present
   in parameter options given as the second argument.

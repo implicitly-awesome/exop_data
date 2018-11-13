@@ -7,7 +7,7 @@ defmodule ExopProps.ParamsGenerator.Atom do
 
   @behaviour ExopProps.ParamsGenerator.Generator
 
-  def generate(opts \\ %{}) do
+  def generate(opts \\ %{}, _props_opts \\ %{}) do
     # TODO: implement :alias option
     opts |> Map.get(:length) |> do_generate()
   end

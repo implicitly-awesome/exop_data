@@ -9,7 +9,7 @@ defmodule ExopProps.ParamsGenerator.Struct do
 
   alias ExopProps.ParamsGenerator.Term
 
-  def generate(opts \\ %{}) do
+  def generate(opts \\ %{}, _props_opts \\ %{}) do
     if struct_module = Map.get(opts, :struct_module) do
       struct = struct!(struct_module, %{})
       keys = struct |> Map.keys() |> List.delete(:__struct__)
