@@ -41,6 +41,10 @@ defmodule ExopProps.ParamsGenerator do
 
   def resolve_opts(%{in: values}), do: resolve_in_list(values)
 
+  def resolve_opts(%{format: regex}), do: resolve_format(regex)
+
+  def resolve_opts(%{regex: regex}), do: resolve_format(regex)
+
   def resolve_opts(param_opts) when is_map(param_opts) do
     param_type = param_type(param_opts)
 
@@ -105,4 +109,6 @@ defmodule ExopProps.ParamsGenerator do
   defp resolve_exact(value), do: StreamData.constant(value)
 
   defp resolve_in_list(in_list) when is_list(in_list), do: StreamData.member_of(in_list)
+
+  defp resolve_format(regex), do: Randex.stream(regex, mod: Randex.Generator.StreamData)
 end

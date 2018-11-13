@@ -59,6 +59,12 @@ defmodule ExopPropsTest do
     end
   end
 
+  test "Format" do
+    check all params <- exop_props(Format) do
+      assert params == Format.run!(params)
+    end
+  end
+
   property "Multiply" do
     check all %{a: a, b: b} = params <- exop_props(Multiply) do
       result = Multiply.run!(params)
