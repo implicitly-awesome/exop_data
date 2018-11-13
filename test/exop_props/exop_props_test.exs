@@ -144,14 +144,6 @@ defmodule ExopPropsTest do
     end
   end
 
-  defmodule Format do
-    use Exop.Operation
-
-    parameter(:a, type: :string, format: ~r/@/)
-
-    def process(params), do: params
-  end
-
   defmodule TestInnerMap do
     use Exop.Operation
 
