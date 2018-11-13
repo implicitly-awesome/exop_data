@@ -5,8 +5,6 @@ defmodule ExopProps.ParamsGenerator do
 
   use ExUnitProperties
 
-  import ExopProps.Utils
-
   alias ExopProps.{CommonFilters, CommonGenerators}
 
   @doc """
@@ -99,12 +97,12 @@ defmodule ExopProps.ParamsGenerator do
   @spec generator_for_param(ExopProps.contract_item(), map()) :: {atom(), StreamData.t()}
   defp generator_for_param(%{name: param_name, opts: param_opts}, props_opts) do
     generators = Map.get(props_opts, :generators, %{})
-    param_generator = Map.get(generators, param_name)
 
-    if is_generator?(param_generator) do
-      {param_name, param_generator}
-    else
-      {param_name, build_generator(param_opts, props_opts)}
+    case Map.get(generators, param_name) do
+      %StreamData{} = param_generator ->
+        {param_name, param_generator}
+      _ ->
+        {param_name, build_generator(param_opts, props_opts)}
     end
   end
 
