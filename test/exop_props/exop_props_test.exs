@@ -44,7 +44,7 @@ defmodule ExopPropsTest do
     def process(params), do: params
   end
 
-  test "Custom generator" do
+  property "Custom generator" do
     domains = ["gmail.com", "hotmail.com", "yahoo.com"]
 
     email_generator =
@@ -59,7 +59,7 @@ defmodule ExopPropsTest do
     end
   end
 
-  test "Format" do
+  property "Format" do
     check all params <- exop_props(Format) do
       assert params == Format.run!(params)
     end
