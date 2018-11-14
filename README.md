@@ -249,15 +249,17 @@ contract = [
   name: :param_complex_param,
   opts: [type: :map, required: true, inner: %{
     a: [type: :integer, numericality: %{in: 10..100}],
-    b: [type: :list, list_item: %{type: :map, inner: %{
-      c: [type: :list, required: true, list_item: %{
-        type: :list, list_item: %{
-          type: :map, inner: %{
-            type: :string, length: %{is: 12}
+    b: [type: :list, length: %{min: 1}, list_item: %{
+      type: :map, inner: %{
+        c: [type: :list, required: true, list_item: %{
+          type: :list, list_item: %{
+            type: :map, inner: %{
+              type: :string, length: %{is: 12}
+            }
           }
-        }
-      }]
-    }}]
+        }]
+      }
+    }]
   }]
 ]
 ```
