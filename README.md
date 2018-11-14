@@ -27,6 +27,10 @@ Here is the [CHANGELOG](https://github.com/madeinussr/exop_data/blob/master/CHAN
 - [Generator options](#generator-options)
   - [Exact values](#exact-values)
   - [Custom generators](#custom-generators)
+- [Limitations](#limitations)
+  - [Structs](#structs)
+  - [Format (regex)](#format-regex)
+  - [Func](#func)
 
 ## Installation
 
