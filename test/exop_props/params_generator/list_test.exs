@@ -94,7 +94,10 @@ defmodule ExopProps.ParamsGenerator.ListTest do
 
     property ":inner" do
       generator =
-        generate(%{length: %{min: 1}, list_item: %{type: :map, inner: %{a: [type: :atom, required: true]}}})
+        generate(%{
+          length: %{min: 1},
+          list_item: %{type: :map, inner: %{a: [type: :atom, required: true]}}
+        })
 
       check all value <- generator do
         random_item = value |> Enum.take_random(1) |> Enum.at(0)

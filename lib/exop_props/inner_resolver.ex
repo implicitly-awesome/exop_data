@@ -22,7 +22,7 @@ defmodule ExopProps.InnerResolver do
       StreamData.atom(:alphanumeric)
       |> StreamData.map_of(StreamData.constant(required: true), length: 1)
       |> Enum.take(amount_to_add)
-      |> Enum.reduce(inner_opts, fn x, acc -> Map.merge(acc, x) end)
+      |> Enum.reduce(inner_opts, fn x, acc -> Map.merge(acc, x, fn _k, v1, _v2 -> v1 end) end)
     else
       inner_opts
     end

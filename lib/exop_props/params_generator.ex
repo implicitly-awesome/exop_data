@@ -101,6 +101,7 @@ defmodule ExopProps.ParamsGenerator do
     case Map.get(generators, param_name) do
       %StreamData{} = param_generator ->
         {param_name, param_generator}
+
       _ ->
         {param_name, build_generator(param_opts, props_opts)}
     end
