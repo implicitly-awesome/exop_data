@@ -281,6 +281,70 @@ We aren't going to provide a definitive guide for all possible checks and option
 
 ### Custom generators
 
+## Limitations
+
+### Structs
+
+Parameter with `struct` validation populates with struct of random data. Imagine we have such contract:
+
+```elixir
+contract = [
+  %{
+    name: :struct_param,
+    opts: [required: true, struct: %MyStruct{}]
+  }
+]
+```
+
+ExopData will generate such data:
+
+```elixir
+iex> contract |> ExopData.generate() |> Enum.take(3)
+[
+  %{struct_param: %MyStruct{a: 1}},
+  %{struct_param: %MyStruct{a: "0"}},
+  %{struct_param: %MyStruct{a: ""}}
+]
+```
+
+You can use [exact values](#exact-values) or [custom generators](#custom-generators) options to build more specific values.
+
+### Format (regex)
+
+You can describe your parameters with format based on regular expressions:
+
+```elixir
+contract = [
+  %{
+    name: :rsa_fingerprint,
+    opts: [required: true, format: ~r/^(ssh-rsa) ([0-9]{3,4}) ([0-9a-f]{2}:){15}[0-9a-f]{2}$/]
+  }
+]
+```
+
+Thanks to the [Randex](https://github.com/ananthakumaran/randex) we can generate data for such as well:
+
+```elixir
+iex> contract |> ExopData.generate() |> Enum.take(3)
+[
+  %{
+    rsa_fingerprint: "ssh-rsa 569 60:1b:bd:78:cc:8d:09:b8:ce:ee:0c:45:72:7c:0d:e8"
+  },
+  %{
+    rsa_fingerprint: "ssh-rsa 737 0a:16:df:0a:5d:3b:8b:21:6d:bf:33:bf:06:44:5f:b7"
+  },
+  %{
+    rsa_fingerprint: "ssh-rsa 3019 fc:ca:fe:a8:7c:63:c9:e5:46:0e:a3:e4:be:74:0f:35"
+  }
+]
+```
+
+At the moment [Randex](https://github.com/ananthakumaran/randex) doesn't support some regular expressions, check docs for this library to know more. You can use [exact values](#exact-values) or [custom generators](#custom-generators) options to build more specific values.
+
+### Func
+
+ExopData doesn't support data generation for parameters with `func` validations, use [exact values](#exact-values) or [custom generators](#custom-generators) options to build values for such parameters.
+
 ## Maintainers
 
 Andrey Chernykh ([madeinussr](https://github.com/madeinussr))
