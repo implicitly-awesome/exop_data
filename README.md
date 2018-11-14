@@ -217,12 +217,12 @@ This parameter check defines a specification for all items in a list. It can con
 ```elixir
 contract = [
   name: :param_list,
-  opts: [type: :list, required: true, list_item: %{type: :string, required: true}]
+  opts: [type: :list, required: true, list_item: %{type: :string}, length: %{min: 1}]
 ]
 ```
 
 That contract means that we expect `:param_list` parameter to be a required list which consist of a number of strings.
-`required: true` within `list_item` check means we expect to get at least one item in this list.
+`length: %{min: 1}` check means we expect to get at least one item in this list.
 
 ### `inner` check
 
