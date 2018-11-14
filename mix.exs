@@ -2,7 +2,8 @@ defmodule ExopData.Mixfile do
   use Mix.Project
 
   @description """
-  Here will be a description
+  The library provide the convenient way to generate data based on provided contract which describes
+  data structure you're interesting in.
   """
 
   def project do

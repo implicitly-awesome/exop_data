@@ -6,6 +6,7 @@ The goal of this library is to help you to write property-based tests by utilizi
 If you already use [Exop](https://github.com/madeinussr/exop) it is super easy.
 Even if you haven't had Exop in your project yet you can use ExopData - just need to provide
 a desirable params description (contract) that conforms Exop operation's contract format (the list of `%{name: atom(), opts: keyword()}`).
+Not interested in property-based testing, but need to generate data? ExopData will help you with this either.
 
 Here is the [CHANGELOG](https://github.com/madeinussr/exop_data/blob/master/CHANGELOG.md)
 
