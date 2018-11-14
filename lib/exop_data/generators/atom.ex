@@ -1,11 +1,11 @@
-defmodule ExopProps.ParamsGenerator.Atom do
+defmodule ExopData.Generators.Atom do
   @moduledoc """
-  Implements ExopProps generators behaviour for `atom` parameter type.
+  Implements ExopData generators behaviour for `atom` parameter type.
   """
 
-  alias ExopProps.CommonGenerators
+  alias ExopData.CommonGenerators
 
-  @behaviour ExopProps.ParamsGenerator.Generator
+  @behaviour ExopData.Generator
 
   def generate(opts \\ %{}, _props_opts \\ %{}) do
     # TODO: implement :alias option

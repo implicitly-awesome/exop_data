@@ -10,11 +10,11 @@ use Mix.Config
 
 # You can configure your application as:
 #
-#     config :exop_props, key: :value
+#     config :exop_data, key: :value
 #
 # and access this configuration in your application as:
 #
-#     Application.get_env(:exop_props, :key)
+#     Application.get_env(:exop_data, :key)
 #
 # You can also configure a 3rd-party app:
 #

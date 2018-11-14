@@ -1,17 +1,17 @@
-# ExopProps
+# ExopData
 
-[![Build Status](https://travis-ci.org/madeinussr/exop_props.svg?branch=master)](https://travis-ci.org/madeinussr/exop_props)
+[![Build Status](https://travis-ci.org/madeinussr/exop_data.svg?branch=master)](https://travis-ci.org/madeinussr/exop_data)
 
 The goal of this library is to help you to write property-based tests by utilizing the power of Exop and [StreamData](https://github.com/whatyouhide/stream_data)
 If you already use [Exop](https://github.com/madeinussr/exop) it is super easy.
-Even if you haven't had Exop in your project yet you can use ExopProps - just need to provide
+Even if you haven't had Exop in your project yet you can use ExopData - just need to provide
 a desirable params description (contract) that conforms Exop operation's contract format (the list of `%{name: atom(), opts: keyword()}`).
 
-Here is the [CHANGELOG](https://github.com/madeinussr/exop_props/blob/master/CHANGELOG.md)
+Here is the [CHANGELOG](https://github.com/madeinussr/exop_data/blob/master/CHANGELOG.md)
 
 ## Installation
 
-Work in progress at the moment. ExopProps will be published soon 📦
+Work in progress at the moment. ExopData will be published soon 📦
 
 ## How it works
 

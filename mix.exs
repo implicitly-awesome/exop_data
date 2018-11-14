@@ -1,4 +1,4 @@
-defmodule ExopProps.Mixfile do
+defmodule ExopData.Mixfile do
   use Mix.Project
 
   @description """
@@ -7,14 +7,14 @@ defmodule ExopProps.Mixfile do
 
   def project do
     [
-      app: :exop_props,
+      app: :exop_data,
       version: "0.0.0",
       elixir: "~> 1.5",
-      name: "ExopProps",
+      name: "ExopData",
       description: @description,
       package: package(),
       deps: deps(),
-      source_url: "https://github.com/madeinussr/exop_props",
+      source_url: "https://github.com/madeinussr/exop_data",
       docs: [extras: ["README.md"]],
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod
@@ -41,7 +41,7 @@ defmodule ExopProps.Mixfile do
       files: ["lib", "mix.exs", "README.md", "LICENSE"],
       maintainers: ["Andrey Chernykh", "Aleksandr Fomin"],
       licenses: ["MIT"],
-      links: %{"Github" => "https://github.com/madeinussr/exop_props"}
+      links: %{"Github" => "https://github.com/madeinussr/exop_data"}
     ]
   end
 end

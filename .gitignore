@@ -20,7 +20,7 @@ erl_crash.dump
 *.ez
 
 # Ignore package tarball (built via "mix hex.build").
-exop_props-*.tar
+*.tar
 
 # OSX files
 .DS_Store

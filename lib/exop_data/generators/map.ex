@@ -1,11 +1,11 @@
-defmodule ExopProps.ParamsGenerator.Map do
+defmodule ExopData.Generators.Map do
   @moduledoc """
-  Implements ExopProps generators behaviour for `map` parameter type.
+  Implements ExopData generators behaviour for `map` parameter type.
   """
 
-  @behaviour ExopProps.ParamsGenerator.Generator
+  @behaviour ExopData.Generator
 
-  import ExopProps.InnerResolver
+  import ExopData.InnerResolver
 
   def generate(opts \\ %{}, props_opts \\ %{})
 

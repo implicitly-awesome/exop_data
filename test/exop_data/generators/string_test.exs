@@ -1,8 +1,8 @@
-defmodule ExopProps.ParamsGenerator.StringTest do
+defmodule ExopData.Generators.StringTest do
   use ExUnit.Case, async: true
   use ExUnitProperties
 
-  import ExopProps.ParamsGenerator.String, only: [generate: 1]
+  import ExopData.Generators.String, only: [generate: 1]
 
   property "generates string generator" do
     check all value <- generate(%{}) do

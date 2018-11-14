@@ -1,4 +1,4 @@
-defmodule ExopProps.CommonFilters do
+defmodule ExopData.CommonFilters do
   @moduledoc """
   Defines filters which are common for different types.
   """

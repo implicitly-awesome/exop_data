@@ -1,8 +1,8 @@
-defmodule ExopProps.ParamsGenerator.IntegerTest do
+defmodule ExopData.Generators.IntegerTest do
   use ExUnit.Case, async: true
   use ExUnitProperties
 
-  import ExopProps.ParamsGenerator.Integer, only: [generate: 1]
+  import ExopData.Generators.Integer, only: [generate: 1]
 
   property "generates integer generator" do
     check all value <- generate(%{}) do

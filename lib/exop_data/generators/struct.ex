@@ -1,13 +1,13 @@
-defmodule ExopProps.ParamsGenerator.Struct do
+defmodule ExopData.Generators.Struct do
   @moduledoc """
-  Implements ExopProps generators behaviour for `struct` parameter type.
+  Implements ExopData generators behaviour for `struct` parameter type.
   """
 
-  @behaviour ExopProps.ParamsGenerator.Generator
+  @behaviour ExopData.Generator
 
   use ExUnitProperties
 
-  alias ExopProps.ParamsGenerator.Term
+  alias ExopData.Generators.Term
 
   def generate(opts \\ %{}, _props_opts \\ %{}) do
     if struct_module = Map.get(opts, :struct_module) do

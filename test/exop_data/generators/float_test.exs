@@ -1,8 +1,8 @@
-defmodule ExopProps.ParamsGenerator.FloatTest do
+defmodule ExopData.Generators.FloatTest do
   use ExUnit.Case, async: true
   use ExUnitProperties
 
-  import ExopProps.ParamsGenerator.Float, only: [generate: 1]
+  import ExopData.Generators.Float, only: [generate: 1]
 
   property "generates float generator" do
     check all value <- generate(%{}) do

@@ -1,8 +1,8 @@
-defmodule ExopProps.ParamsGenerator.Generator do
+defmodule ExopData.Generator do
   @moduledoc """
-  Defines ExopProps generators behaviour.
+  Defines ExopData generators behaviour.
 
-  An ExopProps's generator should define `generate/1` function
+  An ExopData's generator should define `generate/1` function
   which takes a contract's parameter options with your property test options
   and returns StreamData generator made with respect to the options.
   """
