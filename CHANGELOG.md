@@ -1,4 +1,4 @@
-## [0.1.0] - 2018.mm.dd
+## [0.1.0] - 2018.11.14
 
 ### Changes
 - initial version 0.1.0 launched
