@@ -245,23 +245,29 @@ Worth to note: keys defined in `inner` check will be present in generated map in
 
 Just kindly remind you: you can create a very complex contract (or describe it in Exop operation) by combining `inner` and `list_item` checks, make them nested etc.
 
+Something crazy like this:
+
 ```elixir
 contract = [
-  name: :param_complex_param,
-  opts: [type: :map, required: true, inner: %{
-    a: [type: :integer, numericality: %{in: 10..100}],
-    b: [type: :list, length: %{min: 1}, list_item: %{
-      type: :map, inner: %{
-        c: [type: :list, required: true, list_item: %{
-          type: :list, list_item: %{
-            type: :map, inner: %{
-              type: :string, length: %{is: 12}
-            }
+  %{
+    name: :complex_param,
+    opts: [
+      type: :map, required: true, inner: %{
+        a: [type: :integer, numericality: %{in: 10..100}],
+        b: [type: :list, length: %{min: 1}, list_item: %{
+          type: :map, inner: %{
+            c: [type: :list, required: true, list_item: %{
+              type: :list, list_item: %{
+                type: :map, inner: %{
+                  d: [type: :string, length: %{is: 12}]
+                }
+              }
+            }]
           }
         }]
       }
-    }]
-  }]
+    ]
+  }
 ]
 ```
 
