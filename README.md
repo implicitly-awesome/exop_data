@@ -275,6 +275,12 @@ We aren't going to provide a definitive guide for all possible checks and option
 
 ### Custom generators
 
+## Maintainers
+
+Andrey Chernykh ([madeinussr](https://github.com/madeinussr))
+
+Aleksandr Fomin ([llxff](https://github.com/llxff))
+
 ## LICENSE
 
     Copyright © 2018 Andrey Chernykh ( andrei.chernykh@gmail.com )
