@@ -1,8 +1,8 @@
-defmodule ExopProps.ParamsGenerator.MapTest do
+defmodule ExopData.Generators.MapTest do
   use ExUnit.Case, async: true
   use ExUnitProperties
 
-  import ExopProps.ParamsGenerator.Map, only: [generate: 1]
+  import ExopData.Generators.Map, only: [generate: 1]
 
   property "generates map generator" do
     check all value <- generate(%{}) do

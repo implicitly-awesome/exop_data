@@ -1,11 +1,11 @@
-defmodule ExopProps.InnerResolver do
+defmodule ExopData.InnerResolver do
   @moduledoc """
   Contains functions to resolve and generate a parameter's :inner check (options)
   """
 
   @inner_params_amount_delta 5
 
-  alias ExopProps.ParamsGenerator
+  alias ExopData
 
   defguard has_inner(value) when is_map(value) or (is_list(value) and length(value) > 0)
 
@@ -50,7 +50,7 @@ defmodule ExopProps.InnerResolver do
   end
 
   @doc """
-  Prepare StreamData generator depends on a parameter :inner check opts and opts given to ExopProps generator.
+  Prepare StreamData generator depends on a parameter :inner check opts and opts given to ExopData generator.
   """
   @spec generator(map(), map()) :: StreamData.t()
   def generator(%{inner: inner_opts}, props_opts) when has_inner(inner_opts) do
@@ -61,7 +61,7 @@ defmodule ExopProps.InnerResolver do
 
     props_opts = resolve_custom_generators(props_opts)
 
-    ParamsGenerator.generate_for(inner_contract, props_opts)
+    ExopData.generate(inner_contract, props_opts)
   end
 
   @spec resolve_custom_generators(map()) :: map()

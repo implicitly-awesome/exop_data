@@ -1,8 +1,8 @@
-defmodule ExopProps.ParamsGenerator.ListTest do
+defmodule ExopData.Generators.ListTest do
   use ExUnit.Case, async: true
   use ExUnitProperties
 
-  import ExopProps.ParamsGenerator.List, only: [generate: 1]
+  import ExopData.Generators.List, only: [generate: 1]
 
   property "generates list generator" do
     check all value <- generate(%{}) do

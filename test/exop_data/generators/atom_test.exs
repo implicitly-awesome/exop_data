@@ -1,8 +1,8 @@
-defmodule ExopProps.ParamsGenerator.AtomTest do
+defmodule ExopData.Generators.AtomTest do
   use ExUnit.Case, async: true
   import ExUnitProperties
 
-  import ExopProps.ParamsGenerator.Atom, only: [generate: 1]
+  import ExopData.Generators.Atom, only: [generate: 1]
 
   property "generates atoms" do
     generator = generate(%{})

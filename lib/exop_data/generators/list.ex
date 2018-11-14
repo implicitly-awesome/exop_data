@@ -1,13 +1,13 @@
-defmodule ExopProps.ParamsGenerator.List do
+defmodule ExopData.Generators.List do
   @moduledoc """
-  Implements ExopProps generators behaviour for `list` parameter type.
+  Implements ExopData generators behaviour for `list` parameter type.
   """
 
-  @behaviour ExopProps.ParamsGenerator.Generator
+  @behaviour ExopData.Generator
 
-  import ExopProps.InnerResolver
+  import ExopData.InnerResolver
 
-  alias ExopProps.ParamsGenerator
+  alias ExopData
 
   def generate(opts \\ %{}, props_opts \\ %{})
 
@@ -49,7 +49,7 @@ defmodule ExopProps.ParamsGenerator.List do
     opts = opts |> Map.get(:list_item, %{}) |> Enum.into(%{})
 
     if Enum.any?(opts) do
-      ParamsGenerator.generator_for_opts(opts, props_opts)
+      ExopData.generator_for_opts(opts, props_opts)
     else
       StreamData.atom(:alphanumeric)
     end

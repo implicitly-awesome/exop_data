@@ -1,8 +1,8 @@
-defmodule ExopProps.ParamsGenerator.BooleanTest do
+defmodule ExopData.Generators.BooleanTest do
   use ExUnit.Case, async: true
   import ExUnitProperties
 
-  import ExopProps.ParamsGenerator.Boolean, only: [generate: 1]
+  import ExopData.Generators.Boolean, only: [generate: 1]
 
   property "generates booleans" do
     generator = generate(%{})

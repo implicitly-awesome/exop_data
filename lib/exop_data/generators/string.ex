@@ -1,9 +1,9 @@
-defmodule ExopProps.ParamsGenerator.String do
+defmodule ExopData.Generators.String do
   @moduledoc """
-  Implements ExopProps generators behaviour for `string` parameter type.
+  Implements ExopData generators behaviour for `string` parameter type.
   """
 
-  @behaviour ExopProps.ParamsGenerator.Generator
+  @behaviour ExopData.Generator
 
   def generate(opts \\ %{}, _props_opts \\ %{}) do
     opts |> Map.get(:length) |> do_generate()

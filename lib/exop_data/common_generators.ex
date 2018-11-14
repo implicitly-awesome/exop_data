@@ -1,4 +1,4 @@
-defmodule ExopProps.CommonGenerators do
+defmodule ExopData.CommonGenerators do
   @moduledoc """
   Functions to create and combine generators.
   """
@@ -16,7 +16,7 @@ defmodule ExopProps.CommonGenerators do
 
   ## Examples
 
-      data = ExopProps.CommonGenerators.map(
+      data = ExopData.CommonGenerators.map(
         %{
           integer: StreamData.integer(),
           binary: StreamData.binary(),
@@ -64,7 +64,7 @@ defmodule ExopProps.CommonGenerators do
 
   ## Examples
 
-      Enum.take(ExopProps.CommonGenerators.atom(), 3)
+      Enum.take(ExopData.CommonGenerators.atom(), 3)
       #=> [:xF, :y, :B_]
   """
   @spec atom(keyword()) :: StreamData.t()

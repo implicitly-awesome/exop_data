@@ -1,6 +1,6 @@
-defmodule ExopPropsTest do
+defmodule ExopDataTest do
   use ExUnit.Case, async: true
-  use ExopProps
+  use ExUnitProperties
 
   defmodule Multiply do
     use Exop.Operation
@@ -54,19 +54,19 @@ defmodule ExopPropsTest do
         name <> "@" <> domain
       end
 
-    check all params <- exop_props(Format, generators: %{a: email_generator}) do
+    check all params <- ExopData.generate(Format, generators: %{a: email_generator}) do
       assert params == Format.run!(params)
     end
   end
 
   property "Format" do
-    check all params <- exop_props(Format) do
+    check all params <- ExopData.generate(Format) do
       assert params == Format.run!(params)
     end
   end
 
   property "Multiply" do
-    check all %{a: a, b: b} = params <- exop_props(Multiply) do
+    check all %{a: a, b: b} = params <- ExopData.generate(Multiply) do
       result = Multiply.run!(params)
       expected_result = a * b
       assert result == expected_result
@@ -74,7 +74,7 @@ defmodule ExopPropsTest do
   end
 
   property "Concatenate" do
-    check all params <- exop_props(Concatenate) do
+    check all params <- ExopData.generate(Concatenate) do
       result = Concatenate.run!(params)
       expected_result = params |> Map.values() |> Enum.join()
       assert result == expected_result
@@ -83,7 +83,7 @@ defmodule ExopPropsTest do
 
   describe "with common filters" do
     property "in" do
-      check all %{a: a, b: b, c: c} <- exop_props(Common) do
+      check all %{a: a, b: b, c: c} <- ExopData.generate(Common) do
         assert a == :aaa
         assert b in [:bb, :bbb, :bbbb]
         assert c not in [:a, :b, :c]
@@ -98,7 +98,7 @@ defmodule ExopPropsTest do
         %{name: :b, opts: [required: true, type: :integer, numericality: %{greater_than: 10}]}
       ]
 
-      check all %{a: a, b: b} <- exop_props(contract) do
+      check all %{a: a, b: b} <- ExopData.generate(contract) do
         assert is_integer(a)
         assert is_integer(b)
         assert a > 0
@@ -107,13 +107,13 @@ defmodule ExopPropsTest do
     end
 
     property "equals filter" do
-      check all %{a: a} <- exop_props([%{name: :a, opts: [required: true, equals: 1]}]) do
+      check all %{a: a} <- ExopData.generate([%{name: :a, opts: [required: true, equals: 1]}]) do
         assert 1 == a
       end
     end
 
     property "exactly filter" do
-      check all %{a: a} <- exop_props([%{name: :a, opts: [required: true, exactly: 1]}]) do
+      check all %{a: a} <- ExopData.generate([%{name: :a, opts: [required: true, exactly: 1]}]) do
         assert 1 == a
       end
     end
@@ -136,7 +136,7 @@ defmodule ExopPropsTest do
         def process(params), do: params
       end
 
-      check all params <- exop_props(TestOp) do
+      check all params <- ExopData.generate(TestOp) do
         %{a: %{b: b, c: c}} = TestOp.run!(params)
         assert is_integer(b)
         assert is_binary(c)
@@ -195,7 +195,7 @@ defmodule ExopPropsTest do
           name <> "@" <> domain
         end
 
-      check all params <- exop_props(Format, generators: %{a: email_generator}) do
+      check all params <- ExopData.generate(Format, generators: %{a: email_generator}) do
         assert params == Format.run!(params)
       end
     end
@@ -203,7 +203,7 @@ defmodule ExopPropsTest do
     property "Map: with :inner" do
       custom_generator = StreamData.constant(%{b: :atom})
 
-      check all params <- exop_props(TestInnerMap, generators: %{a: custom_generator}) do
+      check all params <- ExopData.generate(TestInnerMap, generators: %{a: custom_generator}) do
         %{a: %{b: :atom}} = TestInnerMap.run!(params)
       end
     end
@@ -211,7 +211,7 @@ defmodule ExopPropsTest do
     property "List: with :inner" do
       custom_generator = StreamData.constant(b: :atom)
 
-      check all params <- exop_props(TestInnerList, generators: %{a: custom_generator}) do
+      check all params <- ExopData.generate(TestInnerList, generators: %{a: custom_generator}) do
         %{a: [b: :atom]} = TestInnerList.run!(params)
       end
     end
@@ -219,7 +219,8 @@ defmodule ExopPropsTest do
     property "Map: with nested inner" do
       custom_generator = StreamData.constant(:atom)
 
-      check all params <- exop_props(TestInnerMap, generators: %{a: %{b: custom_generator}}) do
+      check all params <-
+                  ExopData.generate(TestInnerMap, generators: %{a: %{b: custom_generator}}) do
         %{a: %{b: :atom}} = TestInnerMap.run!(params)
       end
     end
@@ -227,7 +228,8 @@ defmodule ExopPropsTest do
     property "List: with nested inner" do
       custom_generator = StreamData.constant(:atom)
 
-      check all params <- exop_props(TestInnerList, generators: %{a: %{b: custom_generator}}) do
+      check all params <-
+                  ExopData.generate(TestInnerList, generators: %{a: %{b: custom_generator}}) do
         %{a: [b: :atom]} = TestInnerList.run!(params)
       end
     end
@@ -236,7 +238,7 @@ defmodule ExopPropsTest do
       custom_generator = StreamData.constant(:atom)
 
       check all params <-
-                  exop_props(TestInnerMap2, generators: %{a: %{b: %{c: custom_generator}}}) do
+                  ExopData.generate(TestInnerMap2, generators: %{a: %{b: %{c: custom_generator}}}) do
         %{a: %{b: %{c: :atom}}} = TestInnerMap2.run!(params)
       end
     end
@@ -245,7 +247,7 @@ defmodule ExopPropsTest do
       custom_generator = StreamData.constant(:atom)
 
       check all params <-
-                  exop_props(TestInnerList2, generators: %{a: %{b: %{c: custom_generator}}}) do
+                  ExopData.generate(TestInnerList2, generators: %{a: %{b: %{c: custom_generator}}}) do
         %{a: [b: [c: :atom]]} = TestInnerList2.run!(params)
       end
     end
