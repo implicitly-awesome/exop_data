@@ -2,7 +2,7 @@
 
 [![Hex.pm](https://img.shields.io/hexpm/v/exop_data.svg)](https://hex.pm/packages/exop_data) [![API Docs](https://img.shields.io/badge/api-docs-yellow.svg?style=flat)](http://hexdocs.pm/exop_data/) [![Build Status](https://travis-ci.org/madeinussr/exop_data.svg?branch=master)](https://travis-ci.org/madeinussr/exop_data)
 
-The goal of this library is to help you to write property-based tests by utilizing the power of Exop and [StreamData](https://github.com/whatyouhide/stream_data)
+The goal of this library is to help you to write property-based tests by utilizing the power of [Exop](https://github.com/madeinussr/exop) and [StreamData](https://github.com/whatyouhide/stream_data).
 If you already use [Exop](https://github.com/madeinussr/exop) it is super easy.
 Even if you haven't had Exop in your project yet you can use ExopData - just need to provide
 a desirable params description (contract) that conforms Exop operation's contract format (the list of `%{name: atom(), opts: keyword()}`).
