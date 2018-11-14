@@ -326,7 +326,7 @@ contract = [
 ]
 ```
 
-Thanks to the [Randex](https://github.com/ananthakumaran/randex) we can generate data for such as well:
+Thanks to the [Randex](https://github.com/ananthakumaran/randex) we can generate data for such parameters as well:
 
 ```elixir
 iex> contract |> ExopData.generate() |> Enum.take(3)
