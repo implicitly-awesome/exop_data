@@ -2,13 +2,14 @@ defmodule ExopData.Mixfile do
   use Mix.Project
 
   @description """
-  Here will be a description
+  The library provide the convenient way to generate data based on provided contract which describes
+  data structure you're interesting in.
   """
 
   def project do
     [
       app: :exop_data,
-      version: "0.0.0",
+      version: "0.1.0",
       elixir: "~> 1.5",
       name: "ExopData",
       description: @description,
@@ -29,10 +30,9 @@ defmodule ExopData.Mixfile do
 
   defp deps do
     [
-      {:ex_doc, "~> 0.12", only: [:dev, :test, :docs]},
+      {:ex_doc, "~> 0.18.0", only: :dev, runtime: false},
       {:stream_data, "~> 0.1"},
-      {:randex, "~> 0.4"},
-      {:exop, "~> 1.1.4"}
+      {:randex, "~> 0.4"}
     ]
   end
 
