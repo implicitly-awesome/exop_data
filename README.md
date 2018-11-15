@@ -28,7 +28,8 @@ Here is the [CHANGELOG](https://github.com/madeinussr/exop_data/blob/master/CHAN
   - [Exact values](#exact-values)
   - [Custom generators](#custom-generators)
 - [Limitations](#limitations)
-  - [Structs](#structs)
+  - [struct: %MyStruct{}](#struct-mystruct)
+  - [type: :struct](#type-struct)
   - [Format (regex)](#format-regex)
   - [Func](#func)
 
@@ -287,7 +288,7 @@ We aren't going to provide a definitive guide for all possible checks and option
 
 ## Limitations
 
-### Structs
+### struct: %MyStruct{}
 
 Parameter with `struct` validation populates with struct of random data. Imagine we have such contract:
 
@@ -312,6 +313,11 @@ iex> contract |> ExopData.generate() |> Enum.take(3)
 ```
 
 You can use [exact values](#exact-values) or [custom generators](#custom-generators) options to build more specific values.
+
+### type: :struct
+
+This check usually means "this parameter should be some struct and I don't care which exactly". Even if it is possible to generate some maps with fake `__struct__` key, we think that it is not the correct way to do so.
+You can use [exact values](#exact-values), [custom generators](#custom-generators), [struct: %MyStruct{}](#struct-mystruct) or `type: :map`.
 
 ### Format (regex)
 

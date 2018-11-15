@@ -174,8 +174,7 @@ defmodule ExopDataTest do
 
       custom_generator = StreamData.constant(:atom)
 
-      check all params <-
-                  ExopData.generate(contract, generators: %{a: %{b: custom_generator}}) do
+      check all params <- ExopData.generate(contract, generators: %{a: %{b: custom_generator}}) do
         %{a: %{b: :atom}} = params
       end
     end
@@ -190,8 +189,7 @@ defmodule ExopDataTest do
 
       custom_generator = StreamData.constant(:atom)
 
-      check all params <-
-                  ExopData.generate(contract, generators: %{a: %{b: custom_generator}}) do
+      check all params <- ExopData.generate(contract, generators: %{a: %{b: custom_generator}}) do
         %{a: [b: :atom]} = params
       end
     end

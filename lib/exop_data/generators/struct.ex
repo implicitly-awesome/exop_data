@@ -20,7 +20,11 @@ defmodule ExopData.Generators.Struct do
         end)
       end
     else
-      raise("You need to provide :struct_module option: `struct_module: Test`")
+      raise ArgumentError, """
+      `type: :struct` check is not supported.
+      You can provide custom generator for this parameter,
+      `struct: %MyStruct{}` or `type: :map`
+      """
     end
   end
 end
