@@ -234,4 +234,30 @@ defmodule ExopDataTest do
       end
     end
   end
+
+  defmodule TestStruct do
+    defstruct ~w(a b c)a
+  end
+
+  property "struct check with inner" do
+    contract = [
+      %{
+        name: :struct_param,
+        opts: [
+          struct: %TestStruct{},
+          required: true,
+          inner: %{
+            a: [type: :string, required: true],
+            b: [type: :atom]
+          }
+        ]
+      }
+    ]
+
+    check all params <- ExopData.generate(contract) do
+      %{struct_param: %TestStruct{a: a}} = params
+
+      assert is_binary(a)
+    end
+  end
 end
