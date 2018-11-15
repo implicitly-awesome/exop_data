@@ -1,3 +1,8 @@
+## [0.1.1] - 2018.mm.dd
+
+### Changes
+- `inner` check now works properly for `struct` check
+
 ## [0.1.0] - 2018.11.14
 
 ### Changes
