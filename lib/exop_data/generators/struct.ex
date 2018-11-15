@@ -7,18 +7,20 @@ defmodule ExopData.Generators.Struct do
 
   use ExUnitProperties
 
-  alias ExopData.Generators.Term
+  alias ExopData.Generators
 
-  def generate(opts \\ %{}, _props_opts \\ %{}) do
+  def generate(opts \\ %{}, props_opts \\ %{}) do
     if struct_module = Map.get(opts, :struct_module) do
-      struct = struct!(struct_module, %{})
-      keys = struct |> Map.keys() |> List.delete(:__struct__)
+      keys = struct_module |> struct!(%{}) |> Map.keys() |> List.delete(:__struct__)
 
-      gen all atom <- Term.generate([]) do
-        Enum.reduce(keys, struct, fn key, struct ->
-          Map.put(struct, key, atom)
-        end)
-      end
+      original_inner = Map.get(opts, :inner, %{})
+
+      new_inner = Enum.reduce(keys, %{}, &Map.put(&2, &1, type: :atom))
+
+      opts
+      |> Map.put(:inner, Map.merge(new_inner, original_inner))
+      |> Generators.Map.generate(props_opts)
+      |> StreamData.map(&struct!(struct_module, &1))
     else
       raise ArgumentError, """
       `type: :struct` check is not supported.
