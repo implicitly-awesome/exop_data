@@ -326,7 +326,7 @@ contract |> ExopData.generate(generators: %{email: email_generator}) |> Enum.tak
 #=> [%{email: "efsT6Px@hotmail.com"}, %{email: "swEowmk7mW0VmkJDF@yahoo.com"}]
 ```
 
-The cool thing is that it is also possible to pass specific generators for `inner` and `last_item` parameters and they can be nested as deep as you want:
+The cool thing is that it is also possible to pass specific generators for `inner` and `list_item` parameters and they can be nested as deep as you want:
 
 ```elixir
 contract = [
