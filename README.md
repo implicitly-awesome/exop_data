@@ -10,6 +10,10 @@ Not interested in property-based testing, but need to generate data? ExopData wi
 
 Here is the [CHANGELOG](https://github.com/madeinussr/exop_data/blob/master/CHANGELOG.md)
 
+## Project Maturity
+
+This library is **under heavy development**. **Bugs** and **breaking changes** are likely.
+
 ## Table of Contents
 
 - [Installation](#installation)
@@ -25,8 +29,8 @@ Here is the [CHANGELOG](https://github.com/madeinussr/exop_data/blob/master/CHAN
   - [inner check](#inner-check)
 - [Exop docs](#exop-docs)
 - [Generator options](#generator-options)
-  - [Exact values](#exact-values)
   - [Custom generators](#custom-generators)
+  - [Exact values](#exact-values)
 - [Limitations](#limitations)
   - [struct: %MyStruct{}](#struct-mystruct)
   - [type: :struct](#type-struct)
@@ -282,9 +286,69 @@ We aren't going to provide a definitive guide for all possible checks and option
 
 ## Generator options
 
+### Custom generators
+
+Sometimes you need to generate complex data or use specific values for your parameters. You can achieve it with custom generators. Take a look at the example:
+
+```elixir
+contract = [
+  %{
+    name: :email,
+    opts: [type: :string, required: true, format: ~r/@/]
+  }
+]
+```
+
+Let's say we want to use specific generator for this parameter:
+
+```elixir
+import ExUnitProperties
+import StreamData
+
+domains = [
+  "gmail.com",
+  "hotmail.com",
+  "yahoo.com",
+]
+
+email_generator =
+  gen all name <- string(:alphanumeric),
+          name != "",
+          domain <- member_of(domains) do
+    name <> "@" <> domain
+  end
+```
+
+You just need to pass it to `generate` function with path to concrete parameter:
+
+```elixir
+contract |> ExopData.generate(generators: %{email: email_generator}) |> Enum.take(2)
+#=> [%{email: "efsT6Px@hotmail.com"}, %{email: "swEowmk7mW0VmkJDF@yahoo.com"}]
+```
+
+The cool thing is that it is also possible to pass specific generators for `inner` and `last_item` parameters and they can be nested as deep as you want:
+
+```elixir
+contract = [
+  %{
+    name: :users,
+    opts: [
+      type: :list, required: true, list_item: [
+        type: :map, required: true, inner: %{
+          email: [type: :string, required: true, format: ~r/@/]
+        }
+      ]
+    ]
+  }
+]
+
+contract |> ExopData.generate(generators: %{users: [%{email: email_generator}]}) |> Enum.take(2)
+#=> [%{users: [%{email: "efsT6Px@hotmail.com"}]}, %{users: [%{email: "swEowmk7mW0VmkJDF@yahoo.com"}]}]
+```
+
 ### Exact values
 
-### Custom generators
+If you need exact value for your parameter just use [StreamData.constant/1](https://hexdocs.pm/stream_data/StreamData.html#constant/1) generator and pass as [custom generator](#custom-generators).
 
 ## Limitations
 

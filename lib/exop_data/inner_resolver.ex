@@ -59,21 +59,6 @@ defmodule ExopData.InnerResolver do
       |> Enum.into(%{})
       |> Enum.map(fn {param_name, param_opts} -> %{name: param_name, opts: param_opts} end)
 
-    props_opts = resolve_custom_generators(props_opts)
-
     ExopData.generate(inner_contract, props_opts)
   end
-
-  @spec resolve_custom_generators(map()) :: map()
-  defp resolve_custom_generators(%{generators: generators} = props_opts) do
-    custom_generators_next_level =
-      generators
-      |> Map.values()
-      |> Enum.filter(&is_map(&1))
-      |> Enum.reduce(%{}, fn m, acc -> Map.merge(acc, m) end)
-
-    Map.put(props_opts, :generators, custom_generators_next_level)
-  end
-
-  defp resolve_custom_generators(props_opts), do: props_opts
 end
