@@ -111,8 +111,12 @@ defmodule ExopData do
       %StreamData{} = param_generator ->
         {param_name, param_generator}
 
-      _ ->
-        {param_name, build_generator(param_opts, props_opts)}
+      nil ->
+        {param_name, build_generator(param_opts, Map.put(props_opts, :generators, %{}))}
+
+      param_generators ->
+        {param_name,
+         build_generator(param_opts, Map.put(props_opts, :generators, param_generators))}
     end
   end
 
