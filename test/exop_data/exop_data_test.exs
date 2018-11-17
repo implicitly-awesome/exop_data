@@ -344,7 +344,8 @@ defmodule ExopDataTest do
       e = StreamData.constant(:e)
 
       check all params <-
-                  generate(contract,
+                  generate(
+                    contract,
                     generators: %{one: %{b: b, d: d, c: %{e: e}}, two: %{b: e, c: b}}
                   ) do
         assert %{
@@ -378,6 +379,38 @@ defmodule ExopDataTest do
       %{struct_param: %TestStruct{a: a}} = params
 
       assert is_binary(a)
+    end
+  end
+
+  describe "with required check" do
+    property "a parameter is required by default" do
+      contract = [%{name: :a, opts: [type: :integer, numericality: %{greater_than: 0}]}]
+
+      check all %{a: a} <- generate(contract) do
+        assert is_integer(a) && a > 0
+      end
+    end
+
+    property "a parameter is required explicitly" do
+      contract = [
+        %{name: :a, opts: [required: true, type: :integer, numericality: %{greater_than: 0}]}
+      ]
+
+      check all %{a: a} <- generate(contract) do
+        assert is_integer(a) && a > 0
+      end
+    end
+
+    property "a parameter is not required explicitly" do
+      contract = [
+        %{name: :a, opts: [required: false, type: :integer, numericality: %{greater_than: 0}]},
+        %{name: :b, opts: [type: :integer, numericality: %{greater_than: 10}]}
+      ]
+
+      check all params <- generate(contract) do
+        assert is_nil(params[:a]) || (is_integer(params[:a]) && params[:a] > 0)
+        assert is_integer(params[:b]) && params[:b] > 10
+      end
     end
   end
 end

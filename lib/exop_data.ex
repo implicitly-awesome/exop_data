@@ -5,7 +5,7 @@ defmodule ExopData do
   contract.
 
   A contract is a list of maps `%{name: atom(), opts: keyword()}`, where each map represents
-  a single parameter (`%{name: :param_a, opts: [type: :string, required: true, length: %{min: 1}]}`)
+  a single parameter (`%{name: :param_a, opts: [type: :string, length: %{min: 1}]}`)
 
   For more information on Exop, operations, contracts and checks see https://github.com/madeinussr/exop
   """
@@ -98,7 +98,10 @@ defmodule ExopData do
   @spec optional_fields([map()]) :: [atom()]
   defp optional_fields(contract) do
     contract
-    |> Stream.reject(&Keyword.get(&1.opts, :required, false))
+    |> Stream.reject(fn
+      %{name: _, opts: opts} when is_list(opts) -> Keyword.get(opts, :required, true)
+      %{name: _, opts: opts} when is_map(opts) -> Map.get(opts, :required, true)
+    end)
     |> Stream.map(& &1.name)
     |> Enum.to_list()
   end
