@@ -88,8 +88,8 @@ A contract might look like this:
 
 ```elixir
 [
-  %{name: param_a, opts: [type: :atom]},
-  %{name: param_b, opts: [type: :integer, required: true, numericality: %{min: 0, max: 10}]},
+  %{name: param_a, opts: [type: :atom, required: false]},
+  %{name: param_b, opts: [type: :integer, numericality: %{min: 0, max: 10}]},
   # more params here
 ]
 ```
@@ -106,8 +106,8 @@ defmodule ExopPropsTest do
   use ExUnitProperties
 
   @contract [
-    %{name: :a, opts: [required: true, type: :integer, numericality: %{greater_than: 0}]},
-    %{name: :b, opts: [required: true, type: :integer, numericality: %{greater_than: 10}]}
+    %{name: :a, opts: [type: :integer, numericality: %{greater_than: 0}]},
+    %{name: :b, opts: [type: :integer, numericality: %{greater_than: 10}]}
   ]
 
   property "Multiply" do
@@ -126,8 +126,8 @@ Or if you have an Exop Operation defined:
 defmodule MultiplyService do
   use Exop.Operation
 
-  parameter(:a, required: true, type: :integer, numericality: %{greater_than: 0})
-  parameter(:b, required: true, type: :integer, numericality: %{greater_than: 10})
+  parameter(:a, type: :integer, numericality: %{greater_than: 0})
+  parameter(:b, type: :integer, numericality: %{greater_than: 10})
 
   def process(%{a: a, b: b} = _params), do: a * b
 end
@@ -159,8 +159,8 @@ You can use ExopData not only in property tests, but in any place you need to ge
 
 ```elixir
 contract = [
-  %{name: :a, opts: [required: true, type: :integer, numericality: %{greater_than: 0}]},
-  %{name: :b, opts: [required: true, type: :integer, numericality: %{greater_than: 10}]}
+  %{name: :a, opts: [type: :integer, numericality: %{greater_than: 0}]},
+  %{name: :b, opts: [type: :integer, numericality: %{greater_than: 10}]}
 ]
 
 contract
@@ -182,8 +182,8 @@ Or with an Exop Operation defined:
 defmodule MultiplyService do
   use Exop.Operation
 
-  parameter(:a, required: true, type: :integer, numericality: %{greater_than: 0})
-  parameter(:b, required: true, type: :integer, numericality: %{greater_than: 10})
+  parameter(:a, type: :integer, numericality: %{greater_than: 0})
+  parameter(:b, type: :integer, numericality: %{greater_than: 10})
 
   def process(%{a: a, b: b} = _params), do: a * b
 end
@@ -226,7 +226,7 @@ This parameter check defines a specification for all items in a list. It can con
 ```elixir
 contract = [
   name: :param_list,
-  opts: [type: :list, required: true, list_item: %{type: :string}, length: %{min: 1}]
+  opts: [type: :list, list_item: %{type: :string}, length: %{min: 1}]
 ]
 ```
 
@@ -240,9 +240,9 @@ This check allow you to set expectations on a map parameter consist. Where keys 
 ```elixir
 contract = [
   name: :param_map,
-  opts: [type: :map, required: true, inner: %{
-    a: [type: :integer, required: true],
-    b: [type: :string],
+  opts: [type: :map, inner: %{
+    a: [type: :integer],
+    b: [type: :string, required: false],
     c: [type: :list, list_item: %{type: :integer, numericality: %{min: 10}}]
   }]
 ]
@@ -261,11 +261,11 @@ contract = [
   %{
     name: :complex_param,
     opts: [
-      type: :map, required: true, inner: %{
+      type: :map, inner: %{
         a: [type: :integer, numericality: %{in: 10..100}],
         b: [type: :list, length: %{min: 1}, list_item: %{
           type: :map, inner: %{
-            c: [type: :list, required: true, list_item: %{
+            c: [type: :list, list_item: %{
               type: :list, list_item: %{
                 type: :map, inner: %{
                   d: [type: :string, length: %{is: 12}]
@@ -292,10 +292,7 @@ Sometimes you need to generate complex data or use specific values for your para
 
 ```elixir
 contract = [
-  %{
-    name: :email,
-    opts: [type: :string, required: true, format: ~r/@/]
-  }
+  %{name: :email, opts: [type: :string, format: ~r/@/]}
 ]
 ```
 
@@ -333,9 +330,9 @@ contract = [
   %{
     name: :users,
     opts: [
-      type: :list, required: true, list_item: [
-        type: :map, required: true, inner: %{
-          email: [type: :string, required: true, format: ~r/@/]
+      type: :list, list_item: [
+        type: :map, inner: %{
+          email: [type: :string, format: ~r/@/]
         }
       ]
     ]
@@ -357,12 +354,7 @@ If you need exact value for your parameter just use [StreamData.constant/1](http
 Parameter with `struct` validation populates with struct of random data. Imagine we have such contract:
 
 ```elixir
-contract = [
-  %{
-    name: :struct_param,
-    opts: [required: true, struct: %MyStruct{}]
-  }
-]
+contract = [%{name: :struct_param, opts: [struct: %MyStruct{}]}]
 ```
 
 ExopData will generate such data:
@@ -391,7 +383,7 @@ You can describe your parameters with format based on regular expressions:
 contract = [
   %{
     name: :rsa_fingerprint,
-    opts: [required: true, format: ~r/^(ssh-rsa) ([0-9]{3,4}) ([0-9a-f]{2}:){15}[0-9a-f]{2}$/]
+    opts: [format: ~r/^(ssh-rsa) ([0-9]{3,4}) ([0-9a-f]{2}:){15}[0-9a-f]{2}$/]
   }
 ]
 ```
