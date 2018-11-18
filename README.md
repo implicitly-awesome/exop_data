@@ -203,13 +203,7 @@ MultiplyService
 
 ### `required` check
 
-When it comes to data generating, by default, ExopData behaves like this:
-if a parameter wasn't explicitly marked with a check `required: true` ExopData generates
-that parameter occasionally (sometimes there is such parameter in generated data, sometimes not).
-The parameter and it's value will always be presented in the resulting map only if it was explicitly
-marked as required.
-
-It allows us to generate fair data with all possible corner-cases for provided contract.
+By default a parameter and it's value will always be presented in the resulting map. If a parameter explicitly marked with the check `required: false` ExopData generates that parameter occasionally (sometimes there is such parameter in generated data, sometimes not). It allows us to generate fair data with all possible corner-cases for provided contract.
 
 ### `allow_nil` option
 
