@@ -7,8 +7,9 @@ defmodule ExopData.Generators.Float do
 
   @diff 0.1
 
-  def generate(opts \\ %{}, _props_opts \\ %{}),
-    do: opts |> Map.get(:numericality) |> do_generate()
+  def generate(opts \\ %{}, _props_opts \\ %{}) do
+    opts |> Map.get(:numericality) |> do_generate()
+  end
 
   @spec do_generate(map()) :: StreamData.t()
   defp do_generate(%{equal_to: exact}), do: constant(exact)

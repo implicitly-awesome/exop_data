@@ -14,11 +14,13 @@ defmodule ExopData.Generators.List do
 
   def generate(opts \\ %{}, props_opts \\ %{})
 
-  def generate(opts, props_opts) when is_list(opts),
-    do: opts |> Enum.into(%{}) |> generate(props_opts)
+  def generate(opts, props_opts) when is_list(opts) do
+    opts |> Enum.into(%{}) |> generate(props_opts)
+  end
 
-  def generate(opts, props_opts) when is_list(props_opts),
-    do: generate(opts, Enum.into(props_opts, %{}))
+  def generate(opts, props_opts) when is_list(props_opts) do
+    generate(opts, Enum.into(props_opts, %{}))
+  end
 
   def generate(%{inner: _} = opts, props_opts) do
     opts |> Map.put(:inner, resolve_inner_opts(opts)) |> do_generate(props_opts)
@@ -27,8 +29,9 @@ defmodule ExopData.Generators.List do
   def generate(opts, props_opts), do: do_generate(opts, props_opts)
 
   @spec do_generate(map(), map()) :: StreamData.t()
-  defp do_generate(%{inner: _} = opts, props_opts),
-    do: StreamData.map(generator(opts, props_opts), &Enum.into(&1, []))
+  defp do_generate(%{inner: _} = opts, props_opts) do
+    StreamData.map(generator(opts, props_opts), &Enum.into(&1, []))
+  end
 
   defp do_generate(opts, %{generators: [%StreamData{} = generator]}) do
     StreamData.list_of(generator, length_opts(opts))
