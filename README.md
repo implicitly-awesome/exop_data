@@ -150,9 +150,6 @@ In both cases the result will be the same: ExopData takes either the explicit co
 the Operation module (and get it's contract under the hood) and generates a map, where keys are
 params defined in the contract.
 
-**NB**: `exop_data/2` imports `ExUnitProperties` so you don't need to include
-`use ExUnitProperties` in your tests.
-
 ### Data generating
 
 You can use ExopData not only in property tests, but in any place you need to generate data:

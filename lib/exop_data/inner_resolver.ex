@@ -3,7 +3,7 @@ defmodule ExopData.InnerResolver do
   Contains functions to resolve and generate a parameter's :inner check (options)
   """
 
-  @inner_params_amount_delta 5
+  @inner_params_amount_delta 3
 
   alias ExopData
 
@@ -19,8 +19,9 @@ defmodule ExopData.InnerResolver do
     amount_to_add = inner_params_amount_to_add(length_opts, Enum.count(inner_opts))
 
     if amount_to_add > 0 do
-      StreamData.atom(:alphanumeric)
-      |> StreamData.map_of(StreamData.constant(required: true), length: 1)
+      :alphanumeric
+      |> StreamData.atom()
+      |> StreamData.map_of(StreamData.constant(required: true, type: :string), length: 1)
       |> Enum.take(amount_to_add)
       |> Enum.reduce(inner_opts, fn x, acc -> Map.merge(acc, x, fn _k, v1, _v2 -> v1 end) end)
     else

@@ -258,7 +258,7 @@ defmodule ExopDataTest do
       ]
 
       check all %{a: params} <- generate(contract, generators: %{a: [%{key: generator}]}) do
-        assert [%{key: :atom}] == params
+        assert [%{key: :atom}] = params
       end
     end
 
@@ -306,8 +306,8 @@ defmodule ExopDataTest do
         }
       ]
 
-      check all %{a: params} <- generate(contract, generators: %{a: [[%{key: generator}]]}) do
-        assert [[%{key: :atom}]] == params
+      check all %{a: a} <- generate(contract, generators: %{a: [[%{key: generator}]]}) do
+        assert [[%{key: :atom}]] = a
       end
     end
 
@@ -411,6 +411,38 @@ defmodule ExopDataTest do
         assert is_nil(params[:a]) || (is_integer(params[:a]) && params[:a] > 0)
         assert is_integer(params[:b]) && params[:b] > 10
       end
+    end
+  end
+
+  @skip true
+  property "nested list_item speed test" do
+    contract = [
+      %{
+        name: :complex_param,
+        opts: [
+          type: :map,
+          inner: %{
+            a: [type: :integer, numericality: %{in: 10..100}],
+            b: [type: :map, inner: %{d: [type: :string, length: %{is: 12}]}],
+            # c: [type: :list, list_item: %{type: :atom}]
+            # c: [type: :list, list_item: %{type: :list, list_item: %{type: :string}}]
+            c: [
+              type: :list,
+              list_item: %{
+                type: :map,
+                inner: %{d: [type: :map, inner: %{e: [type: :list, list_item: %{type: :atom}]}]}
+              }
+            ]
+            # c: [type: :list, list_item: %{type: :map, inner: %{d: [type: :map, inner: %{e: [type: :map, inner: %{f: [type: :atom]}]}]}}]
+            # c: [type: :map, inner: %{d: [type: :map, inner: %{e: [type: :map, inner: %{f: [type: :atom]}]}]}]
+          }
+        ]
+      }
+    ]
+
+    check all params <- generate(contract) do
+      # obviously true
+      assert is_map(params.complex_param)
     end
   end
 end
