@@ -414,7 +414,6 @@ defmodule ExopDataTest do
     end
   end
 
-  @skip true
   property "nested list_item speed test" do
     contract = [
       %{
