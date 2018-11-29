@@ -58,16 +58,25 @@ defmodule ExopData do
 
   def generator_for_opts(%{regex: regex}, _opts), do: resolve_format(regex)
 
-  def generator_for_opts(param_opts, opts) when is_map(param_opts) do
-    param_type = param_type(param_opts)
+  def generator_for_opts(%{struct: %struct_module{}} = param_opts, opts) do
+    param_opts
+    |> Map.put(:struct, struct_module)
+    |> generator_for_opts(opts)
+  end
 
-    param_opts =
-      if Map.get(param_opts, :struct) do
-        %struct_module{} = Map.get(param_opts, :struct)
-        Map.put(param_opts, :struct_module, struct_module)
-      else
-        param_opts
-      end
+  def generator_for_opts(%{struct: struct_module} = param_opts, opts)
+      when is_atom(struct_module) do
+    param_opts
+    |> Map.put(:struct_module, struct_module)
+    |> run_generator(opts)
+  end
+
+  def generator_for_opts(param_opts, opts) when is_map(param_opts) do
+    run_generator(param_opts, opts)
+  end
+
+  defp run_generator(param_opts, opts) do
+    param_type = param_type(param_opts)
 
     generator_module =
       [
@@ -89,7 +98,7 @@ defmodule ExopData do
   end
 
   @spec param_type(map()) :: atom()
-  defp param_type(%{struct: %_{}}), do: :struct
+  defp param_type(%{struct: _}), do: :struct
 
   defp param_type(%{type: type}), do: type
 
