@@ -5,7 +5,7 @@ defmodule ExopData.Generators.List do
 
   @behaviour ExopData.Generator
 
-  import ExopData.InnerResolver
+  alias ExopData.InnerResolver
 
   # this is the default maximum length of generated lists in cases where max length hasn't been provided
   @list_item_max_length 10
@@ -23,14 +23,14 @@ defmodule ExopData.Generators.List do
   end
 
   def generate(%{inner: _} = opts, props_opts) do
-    opts |> Map.put(:inner, resolve_inner_opts(opts)) |> do_generate(props_opts)
+    opts |> Map.put(:inner, InnerResolver.resolve_inner_opts(opts)) |> do_generate(props_opts)
   end
 
   def generate(opts, props_opts), do: do_generate(opts, props_opts)
 
   @spec do_generate(map(), map()) :: StreamData.t()
   defp do_generate(%{inner: _} = opts, props_opts) do
-    StreamData.map(generator(opts, props_opts), &Enum.into(&1, []))
+    StreamData.map(InnerResolver.generator(opts, props_opts), &Enum.into(&1, []))
   end
 
   defp do_generate(opts, %{generators: [%StreamData{} = generator]}) do

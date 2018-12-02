@@ -72,10 +72,18 @@ defmodule ExopData do
   end
 
   def generator_for_opts(param_opts, opts) when is_map(param_opts) do
-    run_generator(param_opts, opts)
-  end
+    param_opts =
+      case Map.get(param_opts, :struct, "not_struct") do
+        %struct_module{} when is_atom(struct_module) ->
+          Map.put(param_opts, :struct_module, struct_module)
 
-  defp run_generator(param_opts, opts) do
+        struct_module when is_atom(struct_module) ->
+          Map.put(param_opts, :struct_module, struct_module)
+
+        _ ->
+          param_opts
+      end
+
     param_type = param_type(param_opts)
 
     generator_module =
@@ -98,7 +106,9 @@ defmodule ExopData do
   end
 
   @spec param_type(map()) :: atom()
-  defp param_type(%{struct: _}), do: :struct
+  defp param_type(%{struct: %struct_module{}}) when is_atom(struct_module), do: :struct
+
+  defp param_type(%{struct: struct_module}) when is_atom(struct_module), do: :struct
 
   defp param_type(%{type: type}), do: type
 

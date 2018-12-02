@@ -5,7 +5,7 @@ defmodule ExopData.Generators.Map do
 
   @behaviour ExopData.Generator
 
-  import ExopData.InnerResolver
+  alias ExopData.InnerResolver
 
   def generate(opts \\ %{}, props_opts \\ %{})
 
@@ -18,13 +18,13 @@ defmodule ExopData.Generators.Map do
   end
 
   def generate(%{inner: _} = opts, props_opts) do
-    opts |> Map.put(:inner, resolve_inner_opts(opts)) |> do_generate(props_opts)
+    opts |> Map.put(:inner, InnerResolver.resolve_inner_opts(opts)) |> do_generate(props_opts)
   end
 
   def generate(opts, props_opts), do: do_generate(opts, props_opts)
 
   @spec do_generate(map(), map()) :: StreamData.t()
-  defp do_generate(%{inner: _} = opts, props_opts), do: generator(opts, props_opts)
+  defp do_generate(%{inner: _} = opts, props_opts), do: InnerResolver.generator(opts, props_opts)
 
   defp do_generate(opts, _props_opts) do
     [StreamData.binary(), StreamData.atom(:alphanumeric)]

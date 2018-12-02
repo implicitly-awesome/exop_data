@@ -11,21 +11,23 @@ defmodule ExopData.Generators.Struct do
 
   def generate(opts \\ %{}, props_opts \\ %{}) do
     if struct_module = Map.get(opts, :struct_module) do
-      keys = struct_module |> struct!(%{}) |> Map.keys() |> List.delete(:__struct__)
-
-      original_inner = Map.get(opts, :inner, %{})
-
-      new_inner = Enum.reduce(keys, %{}, &Map.put(&2, &1, type: :atom))
+      new_inner =
+        struct_module
+        |> struct!(%{})
+        |> Map.drop([:__struct__, :__meta__])
+        |> Enum.reduce(Map.get(opts, :inner, %{}), fn
+          {new_key, _}, original_inner -> Map.put_new(original_inner, new_key, type: :string)
+        end)
 
       opts
-      |> Map.put(:inner, Map.merge(new_inner, original_inner))
+      |> Map.put(:inner, new_inner)
       |> Generators.Map.generate(props_opts)
       |> StreamData.map(&struct!(struct_module, &1))
     else
       raise ArgumentError, """
       `type: :struct` check is not supported.
-      You can provide custom generator for this parameter,
-      `struct: %MyStruct{}` or `type: :map`
+      You can provide custom generator for this parameter or one of checks:
+      `struct: %MyStruct{}`, `struct: MyStruct` or `type: :map`
       """
     end
   end
