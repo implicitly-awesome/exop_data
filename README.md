@@ -41,7 +41,7 @@ This library is **under heavy development**. **Bugs** and **breaking changes** a
 
 ```elixir
 def deps do
-  [{:exop_data, "~> 0.1.1"}]
+  [{:exop_data, "~> 0.1.2"}]
 end
 ```
 
@@ -160,10 +160,7 @@ contract = [
   %{name: :b, opts: [type: :integer, numericality: %{greater_than: 10}]}
 ]
 
-contract
-|> ExopData.generate()
-|> Enum.take(5)
-
+iex> contract |> ExopData.generate() |> Enum.take(5)
 [
   %{a: 3808, b: 3328},
   %{a: 7116, b: 8348},
@@ -185,10 +182,7 @@ defmodule MultiplyService do
   def process(%{a: a, b: b} = _params), do: a * b
 end
 
-MultiplyService
-|> ExopData.generate()
-|> Enum.take(5)
-
+iex> MultiplyService |> ExopData.generate() |> Enum.take(5)
 [
   %{a: 401, b: 2889},
   %{a: 7786, b: 5894},
@@ -310,8 +304,8 @@ email_generator =
 You just need to pass it to `generate` function with path to concrete parameter:
 
 ```elixir
-contract |> ExopData.generate(generators: %{email: email_generator}) |> Enum.take(2)
-#=> [%{email: "efsT6Px@hotmail.com"}, %{email: "swEowmk7mW0VmkJDF@yahoo.com"}]
+iex> contract |> ExopData.generate(generators: %{email: email_generator}) |> Enum.take(2)
+[%{email: "efsT6Px@hotmail.com"}, %{email: "swEowmk7mW0VmkJDF@yahoo.com"}]
 ```
 
 The cool thing is that it is also possible to pass specific generators for `inner` and `list_item` parameters and they can be nested as deep as you want:
@@ -330,9 +324,14 @@ contract = [
   }
 ]
 
-contract |> ExopData.generate(generators: %{users: [%{email: email_generator}]}) |> Enum.take(2)
-#=> [%{users: [%{email: "efsT6Px@hotmail.com"}]}, %{users: [%{email: "swEowmk7mW0VmkJDF@yahoo.com"}]}]
+iex> contract |> ExopData.generate(generators: %{users: [%{email: email_generator}]}) |> Enum.take(2)
+[
+  %{users: [%{email: "efsT6Px@hotmail.com"}]},
+  %{users: [%{email: "swEowmk7mW0VmkJDF@yahoo.com"}]}
+]
 ```
+
+In the example above `generators: %{users: [%{email: email_generator}]}` means that there is a custom generator for `users` param list item. And since it is a map, we've provided the generator for the particular `email` field.
 
 ### Exact values
 
@@ -340,12 +339,12 @@ If you need exact value for your parameter just use [StreamData.constant/1](http
 
 ## Limitations
 
-### struct: %MyStruct{}
+### struct: MyStruct | %MyStruct{}
 
 Parameter with `struct` validation populates with struct of random data. Imagine we have such contract:
 
 ```elixir
-contract = [%{name: :struct_param, opts: [struct: %MyStruct{}]}]
+contract = [%{name: :struct_param, opts: [struct: MyStruct]}]
 ```
 
 ExopData will generate such data:
@@ -360,6 +359,9 @@ iex> contract |> ExopData.generate() |> Enum.take(3)
 ```
 
 You can use [exact values](#exact-values) or [custom generators](#custom-generators) options to build more specific values.
+
+_Sad but true: currently `struct` generator is not so efficient as `map` generator.
+So if you experience performace issues during your property tests, please consider `type: :map` in your contract or provide more specific checks for your struct (with `inner` for example)._
 
 ### type: :struct
 
@@ -397,6 +399,8 @@ iex> contract |> ExopData.generate() |> Enum.take(3)
 ```
 
 At the moment [Randex](https://github.com/ananthakumaran/randex) doesn't support some regular expressions, check docs for this library to know more. You can use [exact values](#exact-values) or [custom generators](#custom-generators) options to build more specific values.
+
+_Sad but true: generating data based on a regex is time-consuming process. `format` check in your operation contract is good for validation, decent enough for just data generating and totally unefficient for property-based tests (as there are a lot of runs, therefore N*t where N is runs amount and t is time needed to generate your data)._
 
 ### Func
 

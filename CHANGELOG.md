@@ -1,3 +1,12 @@
+## [0.1.2] - 2018.12.05
+
+### Changes
+- custom generators for `list_item` check
+- all params in a contract are required by default and not required by explicitly specified `required: false`
+- `struct` check can take a module atom name `MyStruct` not only `%MyStruct{}`
+- structs generator has been refactored
+- minor fixes and performance improvements
+
 ## [0.1.1] - 2018.11.15
 
 ### Changes
