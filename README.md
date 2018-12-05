@@ -160,7 +160,7 @@ contract = [
   %{name: :b, opts: [type: :integer, numericality: %{greater_than: 10}]}
 ]
 
-iex> contract |> ExopData.generate() |> Enum.take(5)
+#iex> contract |> ExopData.generate() |> Enum.take(5)
 [
   %{a: 3808, b: 3328},
   %{a: 7116, b: 8348},
@@ -182,7 +182,7 @@ defmodule MultiplyService do
   def process(%{a: a, b: b} = _params), do: a * b
 end
 
-iex> MultiplyService |> ExopData.generate() |> Enum.take(5)
+#iex> MultiplyService |> ExopData.generate() |> Enum.take(5)
 [
   %{a: 401, b: 2889},
   %{a: 7786, b: 5894},
@@ -304,7 +304,7 @@ email_generator =
 You just need to pass it to `generate` function with path to concrete parameter:
 
 ```elixir
-iex> contract |> ExopData.generate(generators: %{email: email_generator}) |> Enum.take(2)
+#iex> contract |> ExopData.generate(generators: %{email: email_generator}) |> Enum.take(2)
 [%{email: "efsT6Px@hotmail.com"}, %{email: "swEowmk7mW0VmkJDF@yahoo.com"}]
 ```
 
@@ -324,7 +324,7 @@ contract = [
   }
 ]
 
-iex> contract |> ExopData.generate(generators: %{users: [%{email: email_generator}]}) |> Enum.take(2)
+#iex> contract |> ExopData.generate(generators: %{users: [%{email: email_generator}]}) |> Enum.take(2)
 [
   %{users: [%{email: "efsT6Px@hotmail.com"}]},
   %{users: [%{email: "swEowmk7mW0VmkJDF@yahoo.com"}]}
@@ -350,7 +350,7 @@ contract = [%{name: :struct_param, opts: [struct: MyStruct]}]
 ExopData will generate such data:
 
 ```elixir
-iex> contract |> ExopData.generate() |> Enum.take(3)
+#iex> contract |> ExopData.generate() |> Enum.take(3)
 [
   %{struct_param: %MyStruct{a: 1}},
   %{struct_param: %MyStruct{a: "0"}},
@@ -360,7 +360,7 @@ iex> contract |> ExopData.generate() |> Enum.take(3)
 
 You can use [exact values](#exact-values) or [custom generators](#custom-generators) options to build more specific values.
 
-_Sad but true: currently `struct` generator is not so efficient as `map` generator.
+_Sad but true: currently `struct` generator is not as efficient as `map` generator.
 So if you experience performace issues during your property tests, please consider `type: :map` in your contract or provide more specific checks for your struct (with `inner` for example)._
 
 ### type: :struct
@@ -384,7 +384,7 @@ contract = [
 Thanks to the [Randex](https://github.com/ananthakumaran/randex) we can generate data for such parameters as well:
 
 ```elixir
-iex> contract |> ExopData.generate() |> Enum.take(3)
+#iex> contract |> ExopData.generate() |> Enum.take(3)
 [
   %{
     rsa_fingerprint: "ssh-rsa 569 60:1b:bd:78:cc:8d:09:b8:ce:ee:0c:45:72:7c:0d:e8"
