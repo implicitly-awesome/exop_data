@@ -46,5 +46,5 @@ defmodule ExopData.Generators.Map do
     end
   end
 
-  defp length_opts(_), do: []
+  defp length_opts(_), do: [min_length: 0, max_length: 10]
 end

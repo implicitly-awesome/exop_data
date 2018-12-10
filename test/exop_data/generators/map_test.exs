@@ -52,6 +52,14 @@ defmodule ExopData.Generators.MapTest do
         assert value |> Map.keys() |> length() <= 5
       end
     end
+
+    property "is [min: 0, max: 10] by default" do
+      check all value <- generate(%{}) do
+        assert is_map(value)
+        assert Enum.count(value) >= 0
+        assert Enum.count(value) <= 10
+      end
+    end
   end
 
   @inner_opts_simple %{
