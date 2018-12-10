@@ -8,7 +8,6 @@ defmodule ExopData.Generators.Atom do
   @behaviour ExopData.Generator
 
   def generate(opts \\ %{}, _props_opts \\ %{}) do
-    # TODO: implement :alias option
     opts |> Map.get(:length) |> do_generate()
   end
 
