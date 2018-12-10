@@ -3,11 +3,12 @@ defmodule ExopData.Generators.Module do
   Implements ExopData generators behaviour for `module` parameter type.
   """
 
-  alias ExopData.CommonGenerators
-
   @behaviour ExopData.Generator
 
-  def generate(opts \\ %{}, _props_opts \\ %{}) do
-    StreamData.atom(:alias)
+  defmodule ExopData.FakeModule do
+  end
+
+  def generate(_opts \\ %{}, _props_opts \\ %{}) do
+    StreamData.constant(ExopData.FakeModule)
   end
 end

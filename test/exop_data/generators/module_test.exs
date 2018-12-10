@@ -4,11 +4,10 @@ defmodule ExopData.Generators.ModuleTest do
 
   import ExopData.Generators.Module, only: [generate: 1]
 
-  property "generates 'alias' atoms" do
-    generator = generate(%{})
-
-    check all value <- generator do
-      assert is_atom(value)
+  property "generates compiled and loaded ExopData.FakeModule" do
+    check all value <- generate(%{}) do
+      assert ExopData.Generators.Module.ExopData.FakeModule == value
+      assert Code.ensure_compiled?(value)
     end
   end
 end
