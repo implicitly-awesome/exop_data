@@ -102,6 +102,9 @@ defmodule ExopData do
 
   defp param_type(%{type: type}), do: type
 
+  # with no :type specified, but with :inner a param is :map by default
+  defp param_type(%{inner: _}), do: :map
+
   defp param_type(_), do: :term
 
   @spec optional_fields([map()]) :: [atom()]

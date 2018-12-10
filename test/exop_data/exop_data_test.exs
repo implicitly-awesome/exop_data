@@ -455,4 +455,20 @@ defmodule ExopDataTest do
       assert is_map(params.complex_param)
     end
   end
+
+  property "param without :type but with :inner opt is :map by default" do
+    contract = [
+      %{
+        name: :a,
+        opts: [
+          inner: %{b: [type: :atom], c: [type: :string]}
+        ]
+      }
+    ]
+
+    check all %{a: %{b: b, c: c}} <- ExopData.generate(contract) do
+      assert is_atom(b)
+      assert is_binary(c)
+    end
+  end
 end
