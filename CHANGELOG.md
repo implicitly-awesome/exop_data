@@ -3,6 +3,7 @@
 ### Changes
 - generator for `:module` value of the `type` check
 - `allow_nil` has `false` value by default
+- `map` generator without `length` opts provided produces [min: 0, max: 10] maps
 
 ## [0.1.2] - 2018.12.05
 
