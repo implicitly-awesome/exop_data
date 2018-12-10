@@ -2,6 +2,7 @@
 
 ### Changes
 - generator for `:module` value of the `type` check
+- `allow_nil` has `false` value by default
 
 ## [0.1.2] - 2018.12.05
 

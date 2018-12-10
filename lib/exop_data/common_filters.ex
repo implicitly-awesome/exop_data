@@ -37,11 +37,9 @@ defmodule ExopData.CommonFilters do
     StreamData.one_of([nil | List.duplicate(generator, 10)])
   end
 
-  defp do_allow_nil(generator, false) do
+  defp do_allow_nil(generator, _) do
     StreamData.filter(generator, &(not is_nil(&1)))
   end
-
-  defp do_allow_nil(generator, _), do: generator
 
   @spec do_not_in(StreamData.t(), any()) :: StreamData.t()
   defp do_not_in(generator, list) when is_list(list) do
