@@ -1,4 +1,4 @@
-## [0.1.3] - 2018.xx.yy
+## [0.1.3] - 2018.12.11
 
 ### Changes
 - generator for `:module` value of the `type` check

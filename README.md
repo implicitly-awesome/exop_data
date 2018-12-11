@@ -41,7 +41,7 @@ This library is **under heavy development**. **Bugs** and **breaking changes** a
 
 ```elixir
 def deps do
-  [{:exop_data, "~> 0.1.2"}]
+  [{:exop_data, "~> 0.1.3"}]
 end
 ```
 
