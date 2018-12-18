@@ -471,4 +471,35 @@ defmodule ExopDataTest do
       assert is_binary(c)
     end
   end
+
+  describe "param with :type & :in checks" do
+    property "if :in items are all values of the provided :type " do
+      contract = [
+        %{
+          name: :a,
+          opts: [type: :atom, in: [:a, :b, :c, :d]]
+        }
+      ]
+
+      check all %{a: a} <- ExopData.generate(contract) do
+        assert is_atom(a)
+        assert a in [:a, :b, :c, :d]
+      end
+    end
+
+    property "if :in items aren't all values of the provided :type " do
+      contract = [
+        %{
+          name: :a,
+          opts: [type: :atom, in: [:a, :b, "c", :d]]
+        }
+      ]
+
+      assert_raise RuntimeError,
+                   "ExopData: not all :in check items are of the type :atom\n",
+                   fn ->
+                     ExopData.generate(contract)
+                   end
+    end
+  end
 end

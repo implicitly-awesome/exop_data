@@ -12,6 +12,21 @@ defmodule ExopData do
   @type contract_item() :: %{name: atom(), opts: keyword()}
   @type contract() :: [contract_item()]
 
+  @exop_types ~w(
+    boolean
+    integer
+    float
+    string
+    tuple
+    map
+    struct
+    keyword
+    list
+    atom
+    module
+    function
+  )a
+
   alias ExopData.{CommonFilters, CommonGenerators}
 
   @doc """
@@ -52,7 +67,7 @@ defmodule ExopData do
 
   def generator_for_opts(%{exactly: value}, _props_opts), do: resolve_exact(value)
 
-  def generator_for_opts(%{in: values}, _props_opts), do: resolve_in_list(values)
+  def generator_for_opts(%{in: _values} = opts, _props_opts), do: resolve_in_list(opts)
 
   def generator_for_opts(%{format: regex}, _opts), do: resolve_format(regex)
 
@@ -146,7 +161,47 @@ defmodule ExopData do
   defp resolve_exact(value), do: StreamData.constant(value)
 
   @spec resolve_in_list(list()) :: StreamData.t()
-  defp resolve_in_list(in_list) when is_list(in_list), do: StreamData.member_of(in_list)
+  defp resolve_in_list(%{type: type, in: values}) when is_list(values) and type in @exop_types do
+    if Enum.all?(values, &check_type(&1, type)) do
+      StreamData.member_of(values)
+    else
+      raise("""
+      ExopData: not all :in check items are of the type :#{type}
+      """)
+    end
+  end
 
+  defp resolve_in_list(%{type: type, in: values}) when is_list(values) do
+    raise("""
+    ExopData: there is no generator for params of type :#{type},
+    you can add your own clause for such params
+    """)
+  end
+
+  defp resolve_in_list(%{in: values} = _opts) when is_list(values) do
+    StreamData.member_of(values)
+  end
+
+  @spec resolve_format(Regex.t()) :: StreamData.t()
   defp resolve_format(regex), do: Randex.stream(regex, mod: Randex.Generator.StreamData)
+
+  @spec check_type(any(), atom()) :: boolean()
+  defp check_type(value, :boolean) when is_boolean(value), do: true
+  defp check_type(value, :integer) when is_integer(value), do: true
+  defp check_type(value, :float) when is_float(value), do: true
+  defp check_type(value, :string) when is_binary(value), do: true
+  defp check_type(value, :tuple) when is_tuple(value), do: true
+  defp check_type(value, :map) when is_map(value), do: true
+  defp check_type(value, :struct) when is_map(value), do: true
+  defp check_type(value, :list) when is_list(value), do: true
+  defp check_type(value, :atom) when is_atom(value), do: true
+  defp check_type(value, :function) when is_function(value), do: true
+  defp check_type([] = _value, :keyword), do: true
+  defp check_type([{atom, _} | _] = _value, :keyword) when is_atom(atom), do: true
+
+  defp check_type(value, :module) when is_atom(value) do
+    Code.ensure_loaded?(value)
+  end
+
+  defp check_type(_, _), do: false
 end

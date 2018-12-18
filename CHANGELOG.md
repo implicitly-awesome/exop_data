@@ -1,3 +1,8 @@
+## [0.1.4] - yyyy.MM.dd
+
+### Changes
+- if you provide `type` and `in` checks ExopData now verifies whether all items in the `in` are expected `type`
+
 ## [0.1.3] - 2018.12.11
 
 ### Changes
