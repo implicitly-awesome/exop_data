@@ -36,6 +36,7 @@ This library is **under heavy development**. **Bugs** and **breaking changes** a
   - [type: :struct](#type-struct)
   - [Format (regex)](#format-regex)
   - [Func](#func)
+- [Configuration](#configuration)
 
 ## Installation
 
@@ -61,7 +62,7 @@ ExopData easy to use and read. It is simply a joy to write property-based tests 
 Not interested in getting your code well-organized with Exop nor in property-based testing?
 Well, consider data generating with ExopData at least.
 
-## How it works
+## How does it work?
 
 ExopData generates data with [StreamData](https://github.com/whatyouhide/stream_data) generators.
 As an incoming argument ExopData expects an [Exop](https://github.com/madeinussr/exop) operation
@@ -405,6 +406,20 @@ _Sad but true: generating data based on a regex is time-consuming process. `form
 ### Func
 
 ExopData doesn't support data generation for parameters with `func` validations, use [exact values](#exact-values) or [custom generators](#custom-generators) options to build values for such parameters.
+
+## Configuration
+
+In order to speedup your props test during developent you can adjust `StreamData`'s `max_run` configuration options, like this:
+
+`config :stream_data, max_runs: (if Mix.env() == :test, do: 50, else: 500)`
+
+`StreamData` config options (and their defaults):
+
+```elixir
+max_runs: 100,
+max_run_time: :infinity,
+max_shrinking_steps: 100
+```
 
 ## Maintainers
 
