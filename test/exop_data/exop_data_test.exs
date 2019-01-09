@@ -14,8 +14,8 @@ defmodule ExopDataTest do
 
   property "integers with numericality" do
     contract = [
-      %{name: :a, opts: [required: true, type: :integer, numericality: %{greater_than: 0}]},
-      %{name: :b, opts: [required: true, type: :integer, numericality: %{greater_than: 10}]}
+      %{name: :a, opts: [type: :integer, numericality: %{greater_than: 0}]},
+      %{name: :b, opts: [type: :integer, numericality: %{greater_than: 10}]}
     ]
 
     check all %{a: a, b: b} <- generate(contract) do
@@ -39,9 +39,9 @@ defmodule ExopDataTest do
   describe "with common filters" do
     property "in" do
       contract = [
-        %{name: :a, opts: [required: true, exactly: :aaa]},
-        %{name: :b, opts: [required: true, in: [:bb, :bbb, :bbbb]]},
-        %{name: :c, opts: [required: true, type: :atom, not_in: [:a, :b, :c]]}
+        %{name: :a, opts: [exactly: :aaa]},
+        %{name: :b, opts: [in: [:bb, :bbb, :bbbb]]},
+        %{name: :c, opts: [type: :atom, not_in: [:a, :b, :c]]}
       ]
 
       check all %{a: a, b: b, c: c} <- generate(contract) do
@@ -55,8 +55,8 @@ defmodule ExopDataTest do
   describe "with contract passed instead of an operation" do
     property "just contract" do
       contract = [
-        %{name: :a, opts: [required: true, type: :integer, numericality: %{greater_than: 0}]},
-        %{name: :b, opts: [required: true, type: :integer, numericality: %{greater_than: 10}]}
+        %{name: :a, opts: [type: :integer, numericality: %{greater_than: 0}]},
+        %{name: :b, opts: [type: :integer, numericality: %{greater_than: 10}]}
       ]
 
       check all %{a: a, b: b} <- generate(contract) do
@@ -68,13 +68,13 @@ defmodule ExopDataTest do
     end
 
     property "equals filter" do
-      check all %{a: a} <- generate([%{name: :a, opts: [required: true, equals: 1]}]) do
+      check all %{a: a} <- generate([%{name: :a, opts: [equals: 1]}]) do
         assert 1 == a
       end
     end
 
     property "exactly filter" do
-      check all %{a: a} <- generate([%{name: :a, opts: [required: true, exactly: 1]}]) do
+      check all %{a: a} <- generate([%{name: :a, opts: [exactly: 1]}]) do
         assert 1 == a
       end
     end
@@ -87,10 +87,9 @@ defmodule ExopDataTest do
           name: :a,
           opts: [
             type: :map,
-            required: true,
             inner: %{
-              b: [type: :integer, required: true],
-              c: [type: :string, required: true]
+              b: [type: :integer],
+              c: [type: :string]
             }
           ]
         }
@@ -109,7 +108,7 @@ defmodule ExopDataTest do
     end
 
     property "simple", %{simple: generator} do
-      contract = [%{name: :a, opts: [type: :atom, required: true]}]
+      contract = [%{name: :a, opts: [type: :atom]}]
 
       check all params <- generate(contract, generators: %{a: generator}) do
         assert %{a: :atom} == params
@@ -120,7 +119,7 @@ defmodule ExopDataTest do
       contract = [
         %{
           name: :a,
-          opts: [type: :map, required: true, inner: %{b: [type: :atom, required: true]}]
+          opts: [type: :map, inner: %{b: [type: :atom]}]
         }
       ]
 
@@ -135,7 +134,7 @@ defmodule ExopDataTest do
       contract = [
         %{
           name: :a,
-          opts: [type: :list, required: true, inner: %{b: [type: :atom, required: true]}]
+          opts: [type: :list, inner: %{b: [type: :atom]}]
         }
       ]
 
@@ -150,7 +149,7 @@ defmodule ExopDataTest do
       contract = [
         %{
           name: :a,
-          opts: [type: :map, required: true, inner: %{b: [type: :atom, required: true]}]
+          opts: [type: :map, inner: %{b: [type: :atom]}]
         }
       ]
 
@@ -163,7 +162,7 @@ defmodule ExopDataTest do
       contract = [
         %{
           name: :a,
-          opts: [type: :list, required: true, inner: %{b: [type: :atom, required: true]}]
+          opts: [type: :list, inner: %{b: [type: :atom]}]
         }
       ]
 
@@ -178,8 +177,7 @@ defmodule ExopDataTest do
           name: :a,
           opts: [
             type: :map,
-            required: true,
-            inner: %{b: [type: :map, required: true, inner: %{c: [type: :atom, required: true]}]}
+            inner: %{b: [type: :map, inner: %{c: [type: :atom]}]}
           ]
         }
       ]
@@ -195,8 +193,7 @@ defmodule ExopDataTest do
           name: :a,
           opts: [
             type: :list,
-            required: true,
-            inner: %{b: [type: :list, required: true, inner: %{c: [type: :atom, required: true]}]}
+            inner: %{b: [type: :list, inner: %{c: [type: :atom]}]}
           ]
         }
       ]
@@ -250,7 +247,7 @@ defmodule ExopDataTest do
             list_item: [
               type: :map,
               inner: %{
-                key: [type: :atom, required: true]
+                key: [type: :atom]
               }
             ]
           ]
@@ -272,7 +269,7 @@ defmodule ExopDataTest do
             list_item: [
               type: :map,
               inner: %{
-                key: [type: :atom, required: true]
+                key: [type: :atom]
               }
             ]
           ]
@@ -298,7 +295,7 @@ defmodule ExopDataTest do
               list_item: [
                 type: :map,
                 inner: %{
-                  key: [type: :atom, required: true]
+                  key: [type: :atom]
                 }
               ]
             ]
@@ -317,11 +314,10 @@ defmodule ExopDataTest do
           name: :one,
           opts: [
             type: :map,
-            required: true,
             inner: %{
-              b: [type: :atom, required: true],
-              c: [type: :map, required: true, inner: %{e: [type: :atom, required: true]}],
-              d: [type: :atom, required: true]
+              b: [type: :atom],
+              c: [type: :map, inner: %{e: [type: :atom]}],
+              d: [type: :atom]
             }
           ]
         },
@@ -329,11 +325,10 @@ defmodule ExopDataTest do
           name: :two,
           opts: [
             type: :map,
-            required: true,
             inner: %{
-              b: [type: :atom, required: true],
-              c: [type: :atom, required: true],
-              d: [type: :integer, required: true, exactly: 1]
+              b: [type: :atom],
+              c: [type: :atom],
+              d: [type: :integer, exactly: 1]
             }
           ]
         }
@@ -354,6 +349,25 @@ defmodule ExopDataTest do
                } == params
       end
     end
+
+    property "with certain value instead of StreamData.constant/1" do
+      contract = [
+        %{
+          name: :a,
+          opts: [type: :list, inner: %{b: [type: :atom]}]
+        }
+      ]
+
+      check all %{a: a} <- generate(contract, generators: %{a: [b: :just_value]}) do
+        assert :just_value = a[:b]
+      end
+
+      contract = [%{name: :a, opts: [type: :atom]}]
+
+      check all params <- generate(contract, generators: %{a: :another_value}) do
+        assert %{a: :another_value} == params
+      end
+    end
   end
 
   describe "test struct" do
@@ -367,9 +381,8 @@ defmodule ExopDataTest do
           name: :struct_param,
           opts: [
             struct: %TestStruct{},
-            required: true,
             inner: %{
-              string: [type: :string, required: true],
+              string: [type: :string],
               atom: [type: :atom]
             }
           ]
@@ -404,7 +417,7 @@ defmodule ExopDataTest do
 
     property "a parameter is required explicitly" do
       contract = [
-        %{name: :a, opts: [required: true, type: :integer, numericality: %{greater_than: 0}]}
+        %{name: :a, opts: [type: :integer, numericality: %{greater_than: 0}]}
       ]
 
       check all %{a: a} <- generate(contract) do

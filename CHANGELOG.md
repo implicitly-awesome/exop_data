@@ -2,6 +2,7 @@
 
 ### Changes
 - if you provide `type` and `in` checks ExopData now verifies whether all items in the `in` are expected `type`
+- it is now possible to provide some value (not `StreamData` generator) as a custom generator, this value is going to be wrapped into `StreamData.constant/1` under the hood
 
 ## [0.1.3] - 2018.12.11
 

@@ -138,16 +138,13 @@ defmodule ExopData.Generators.MapTest do
           inner: %{
             a: [
               type: :map,
-              required: true,
               inner: %{
                 c: [
-                  required: true,
                   type: :atom
                 ]
               }
             ],
             b: [
-              required: true,
               type: :string
             ]
           }
@@ -166,15 +163,12 @@ defmodule ExopData.Generators.MapTest do
           inner: %{
             a: [
               type: :map,
-              required: true,
               inner: %{
                 c: [
                   type: :map,
-                  required: true,
                   inner: %{
                     d: [
                       type: :integer,
-                      required: true,
                       numericality: %{
                         min: 5,
                         max: 10
@@ -185,7 +179,6 @@ defmodule ExopData.Generators.MapTest do
               }
             ],
             b: [
-              required: true,
               type: :string
             ]
           }

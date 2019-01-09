@@ -21,7 +21,7 @@ defmodule ExopData.InnerResolver do
     if amount_to_add > 0 do
       :alphanumeric
       |> StreamData.atom()
-      |> StreamData.map_of(StreamData.constant(required: true, type: :string), length: 1)
+      |> StreamData.map_of(StreamData.constant(type: :string), length: 1)
       |> Enum.take(amount_to_add)
       |> Enum.reduce(inner_opts, fn x, acc -> Map.merge(acc, x, fn _k, v1, _v2 -> v1 end) end)
     else

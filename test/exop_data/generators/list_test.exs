@@ -96,7 +96,7 @@ defmodule ExopData.Generators.ListTest do
       generator =
         generate(%{
           length: %{min: 1},
-          list_item: %{type: :map, inner: %{a: [type: :atom, required: true]}}
+          list_item: %{type: :map, inner: %{a: [type: :atom]}}
         })
 
       check all value <- generator do
@@ -179,16 +179,13 @@ defmodule ExopData.Generators.ListTest do
           inner: %{
             a: [
               type: :map,
-              required: true,
               inner: %{
                 c: [
-                  required: true,
                   type: :atom
                 ]
               }
             ],
             b: [
-              required: true,
               type: :string
             ]
           }
@@ -207,15 +204,12 @@ defmodule ExopData.Generators.ListTest do
           inner: %{
             a: [
               type: :map,
-              required: true,
               inner: %{
                 c: [
                   type: :map,
-                  required: true,
                   inner: %{
                     d: [
                       type: :integer,
-                      required: true,
                       numericality: %{
                         min: 5,
                         max: 10
@@ -226,7 +220,6 @@ defmodule ExopData.Generators.ListTest do
               }
             ],
             b: [
-              required: true,
               type: :string
             ]
           }

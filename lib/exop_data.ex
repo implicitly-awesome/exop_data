@@ -144,11 +144,22 @@ defmodule ExopData do
       nil ->
         {param_name, build_generator(param_opts, Map.put(props_opts, :generators, %{}))}
 
-      param_generators ->
-        {param_name,
-         build_generator(param_opts, Map.put(props_opts, :generators, param_generators))}
+      some_value ->
+        if has_generator?(some_value) do
+          {param_name, build_generator(param_opts, Map.put(props_opts, :generators, some_value))}
+        else
+          {param_name, StreamData.constant(some_value)}
+        end
     end
   end
+
+  defp has_generator?(%{} = map), do: map |> Map.values() |> has_generator?()
+
+  defp has_generator?([h | t]),
+    do: match?(%StreamData{}, h) || has_generator?(h) || has_generator?(t)
+
+  defp has_generator?(%StreamData{}), do: true
+  defp has_generator?(_), do: false
 
   @spec build_generator(map(), map) :: StreamData.t()
   defp build_generator(param_opts, props_opts) do

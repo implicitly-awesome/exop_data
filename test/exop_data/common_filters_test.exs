@@ -4,7 +4,7 @@ defmodule ExopData.CommonFiltersTest do
 
   describe "allow_nil" do
     property "with 'true' generates at least one nil" do
-      contract = [%{name: :a, opts: [required: true, type: :integer, allow_nil: true]}]
+      contract = [%{name: :a, opts: [type: :integer, allow_nil: true]}]
 
       check_list = contract |> ExopData.generate() |> Enum.take(1000)
 
@@ -17,7 +17,7 @@ defmodule ExopData.CommonFiltersTest do
     end
 
     property "with 'false' generates without nils" do
-      contract = [%{name: :a, opts: [required: true, type: :integer, allow_nil: false]}]
+      contract = [%{name: :a, opts: [type: :integer, allow_nil: false]}]
 
       check_list = contract |> ExopData.generate() |> Enum.take(1000)
 
@@ -29,7 +29,7 @@ defmodule ExopData.CommonFiltersTest do
     end
 
     property "with 'false' by default" do
-      contract = [%{name: :a, opts: [required: true, type: :integer]}]
+      contract = [%{name: :a, opts: [type: :integer]}]
 
       check_list = contract |> ExopData.generate() |> Enum.take(1000)
 
