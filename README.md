@@ -6,13 +6,9 @@ The goal of this library is to help you to write property-based tests by utilizi
 If you already use [Exop](https://github.com/madeinussr/exop) it is super easy.
 Even if you haven't had Exop in your project yet you can use ExopData - just need to provide
 a desirable params description (contract) that conforms Exop operation's contract format (the list of `%{name: atom(), opts: keyword()}`).
-Not interested in property-based testing, but need to generate data? ExopData will help you with this either.
+Not interested in property-based testing, but need to generate data? ExopData will help you with this as well.
 
 Here is the [CHANGELOG](https://github.com/madeinussr/exop_data/blob/master/CHANGELOG.md)
-
-## Project Maturity
-
-This library is **under heavy development**. **Bugs** and **breaking changes** are likely.
 
 ## Table of Contents
 
@@ -336,7 +332,29 @@ In the example above `generators: %{users: [%{email: email_generator}]}` means t
 
 ### Exact values
 
-If you need exact value for your parameter just use [StreamData.constant/1](https://hexdocs.pm/stream_data/StreamData.html#constant/1) generator and pass as [custom generator](#custom-generators).
+If you need exact value for your parameter just provide a specific value as "custom generator".
+For example:
+
+```elixir
+contract = [%{name: :a, opts: [type: :atom]}]
+
+check all params <- generate(contract, generators: %{a: :your_value}) do
+  assert %{a: :your_value} == params
+end
+```
+
+```elixir
+contract = [
+  %{
+    name: :a,
+    opts: [type: :list, inner: %{b: [type: :atom]}]
+  }
+]
+
+check all %{a: a} <- generate(contract, generators: %{a: [b: :your_value]}) do
+  assert :your_value = a[:b]
+end
+```
 
 ## Limitations
 
