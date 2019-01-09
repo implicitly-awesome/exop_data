@@ -356,6 +356,8 @@ check all %{a: a} <- generate(contract, generators: %{a: [b: :your_value]}) do
 end
 ```
 
+_Under the hood an exact value is wrapped in `StreamData.constant/1` and return a generator, so you can use `StreamData.constant/1` itself if you like._
+
 ## Limitations
 
 ### struct: MyStruct | %MyStruct{}
