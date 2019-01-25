@@ -38,7 +38,7 @@ Here is the [CHANGELOG](https://github.com/madeinussr/exop_data/blob/master/CHAN
 
 ```elixir
 def deps do
-  [{:exop_data, "~> 0.1.3"}]
+  [{:exop_data, "~> 0.1.4"}]
 end
 ```
 
@@ -330,6 +330,8 @@ contract = [
 
 In the example above `generators: %{users: [%{email: email_generator}]}` means that there is a custom generator for `users` param list item. And since it is a map, we've provided the generator for the particular `email` field.
 
+So you can use any `StreamData` generators: predefined or custom.
+
 ### Exact values
 
 If you need exact value for your parameter just provide a specific value as "custom generator".
@@ -421,7 +423,7 @@ Thanks to the [Randex](https://github.com/ananthakumaran/randex) we can generate
 
 At the moment [Randex](https://github.com/ananthakumaran/randex) doesn't support some regular expressions, check docs for this library to know more. You can use [exact values](#exact-values) or [custom generators](#custom-generators) options to build more specific values.
 
-_Sad but true: generating data based on a regex is time-consuming process. `format` check in your operation contract is good for validation, decent enough for just data generating and totally unefficient for property-based tests (as there are a lot of runs, therefore N*t where N is runs amount and t is time needed to generate your data)._
+_Sad but true: generating data based on a regex is time-consuming process. `format` check in your operation contract is good for validation, decent enough for just data generating and totally unefficient for property-based tests (as there are a lot of runs, therefore N\*t where N is runs amount and t is time needed to generate your data)._
 
 ### Func
 
@@ -453,4 +455,3 @@ Aleksandr Fomin ([llxff](https://github.com/llxff))
 
     This work is free. You can redistribute it and/or modify it under the
     terms of the MIT License. See the LICENSE file for more details.
-

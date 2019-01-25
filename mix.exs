@@ -9,7 +9,7 @@ defmodule ExopData.Mixfile do
   def project do
     [
       app: :exop_data,
-      version: "0.1.3",
+      version: "0.1.4",
       elixir: ">= 1.5.0",
       name: "ExopData",
       description: @description,
