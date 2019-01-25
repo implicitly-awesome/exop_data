@@ -334,7 +334,8 @@ So you can use any `StreamData` generators: predefined or custom.
 
 ### Exact values
 
-If you need exact value for your parameter just provide a specific value as "custom generator".
+If you need exact value for your parameter just provide a specific value (implicit generator) or `StreamData.constant/1` as custom generator.
+
 For example:
 
 ```elixir
@@ -357,6 +358,44 @@ check all %{a: a} <- generate(contract, generators: %{a: [b: :your_value]}) do
   assert :your_value = a[:b]
 end
 ```
+
+Worth to notice: implicit generator suits cases when you need to generate either some simple data structure or just a basic type's value.
+
+Example:
+
+```elixir
+defmodule YourStruct do
+  defstruct [:a, :b, :c, :d]
+end
+
+# you expect a map parameter to be generated with two required keys: :a and :b
+contract = [
+  %{
+    name: :struct_param,
+    opts: [struct: YourStruct, inner: %{a: [type: :atom], b: [type: :string]}]
+  }
+]
+
+# here within custom_generators there are no StreamData generator and only certain values were provided (implicit generators)
+# it means for ExopData, that you intent to generate exactly %{a: :smth, b: "smth"} map and your code will fail because YourStruct will not have desired :c and :d keys (actually generated data will not be %YourStruct{} at all, it will be a map)
+custom_generators = %{
+  struct_param: %{
+    a: :smth,
+    b: "smth"
+  }
+}
+
+# To fix this use explicit custom generators
+# now ExopData will generate: %YourStruct{a: :smth, b: "smth", c: _some_value_, d: _some_value_} = struct_param
+custom_generators = %{
+  struct_param: %{
+    a: StreamData.constant(:smth),
+    b: StreamData.constant("smth")
+  }
+}
+```
+
+Anyway, implicit custom generators help you to avoid repetitive `StreamData.constant/1` in your tests when you deal with scalar, basic types values, simple structures.
 
 _Under the hood an exact value is wrapped with `StreamData.constant/1` and returns a generator, so you can use `StreamData.constant/1` itself if you like._
 
