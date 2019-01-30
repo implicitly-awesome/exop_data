@@ -403,13 +403,13 @@ _Under the hood an exact value is wrapped with `StreamData.constant/1` and retur
 
 ### struct: MyStruct | %MyStruct{}
 
-Parameter with `struct` validation populates with struct of random data. Imagine we have such contract:
+Parameter with `struct` validation is populated with struct of random data. Imagine we have such contract:
 
 ```elixir
 contract = [%{name: :struct_param, opts: [struct: MyStruct]}]
 ```
 
-ExopData will generate such data:
+ExopData might generate:
 
 ```elixir
 #iex> contract |> ExopData.generate() |> Enum.take(3)
