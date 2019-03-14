@@ -29,6 +29,58 @@ defmodule ExopData do
 
   alias ExopData.{CommonFilters, CommonGenerators}
 
+  defmacro __using__(_opts) do
+    quote do
+      use ExUnitProperties
+
+      import unquote(__MODULE__)
+
+      @before_compile unquote(__MODULE__)
+    end
+  end
+
+  defmacro __before_compile__(_env) do
+    quote do
+      defp check_it(operation, expected_result_func, opts \\ []) do
+        check all params <- ExopData.generate(operation, opts) do
+          expected_result = expected_result_func.(params)
+          operation_result = operation.run(params)
+          assert(operation_result == expected_result)
+        end
+      end
+
+      defp constantize_values(%StreamData{} = generator), do: generator
+
+      defp constantize_values(x) when is_map(x) do
+        Enum.reduce(x, %{}, fn {k, v}, new_map ->
+          Map.put(new_map, k, constantize_values(v))
+        end)
+      end
+
+      defp constantize_values(x), do: StreamData.constant(x)
+    end
+  end
+
+  defmacro check_operation(operation, expected_result_func) do
+    quote do
+      check_it(unquote(operation), unquote(expected_result_func))
+    end
+  end
+
+  defmacro check_operation(operation, opts, expected_result_func) do
+    quote do
+      check_it(unquote(operation), unquote(expected_result_func), unquote(opts))
+    end
+  end
+
+  defmacro sigil_g({:<<>>, _meta, [string]}, _modifiers) do
+    {:ok, value_ast} = Code.string_to_quoted("%{#{string}}")
+
+    quote do
+      constantize_values(unquote(value_ast))
+    end
+  end
+
   @doc """
   Returns a StreamData generator for either an Exop operation or a contract.
   """
@@ -215,39 +267,4 @@ defmodule ExopData do
   end
 
   defp check_type(_, _), do: false
-
-  defmacro __using__(_opts) do
-    quote do
-      use ExUnitProperties
-      use ExUnit.Case, async: true
-
-      import unquote(__MODULE__)
-
-      @before_compile unquote(__MODULE__)
-    end
-  end
-
-  defmacro __before_compile__(_env) do
-    quote do
-      defp check_it(operation, expected_result_func, opts \\ []) do
-        check all params <- ExopData.generate(operation, opts) do
-          expected_result = expected_result_func.(params)
-          operation_result = operation.run(params)
-          assert(operation_result == expected_result)
-        end
-      end
-    end
-  end
-
-  defmacro check_operation(operation, expected_result_func) do
-    quote do
-      check_it(unquote(operation), unquote(expected_result_func))
-    end
-  end
-
-  defmacro check_operation(operation, opts, expected_result_func) do
-    quote do
-      check_it(unquote(operation), unquote(expected_result_func), unquote(opts))
-    end
-  end
 end

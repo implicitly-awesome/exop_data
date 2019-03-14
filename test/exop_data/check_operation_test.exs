@@ -1,4 +1,5 @@
 defmodule CheckOperationTest do
+  use ExUnit.Case, async: true
   use ExopData
 
   # a module to emulate Exop.Operation
