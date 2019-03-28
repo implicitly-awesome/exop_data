@@ -1,3 +1,11 @@
+## [0.1.5] - 2019.03.29
+
+### Changes
+
+- `check_operation` macro to make your tests cleaner
+- `type: :uuid` support
+- `~g` sigil introduced, which helps you a lot with custom generators difinition
+
 ## [0.1.4] - 2019.01.25
 
 ### Changes

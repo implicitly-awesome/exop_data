@@ -23,6 +23,8 @@ Here is the [CHANGELOG](https://github.com/madeinussr/exop_data/blob/master/CHAN
 - [Complex data](#complex-data)
   - [list_item check](#list_item-check)
   - [inner check](#inner-check)
+  - [As complex as you wish](#as-complex-as-you-wish)
+- [Exop operations](#exop-operations)
 - [Exop docs](#exop-docs)
 - [Generator options](#generator-options)
   - [Custom generators](#custom-generators)
@@ -39,7 +41,7 @@ Here is the [CHANGELOG](https://github.com/madeinussr/exop_data/blob/master/CHAN
 
 ```elixir
 def deps do
-  [{:exop_data, "~> 0.1.4"}]
+  [{:exop_data, "~> 0.1.5"}]
 end
 ```
 
@@ -261,6 +263,72 @@ contract = [
     ]
   }
 ]
+```
+
+## Exop operations
+
+As we mentioned earlier, you can generate data by providing Exop.Operation module.
+
+```elixir
+defmodule MultiplyService do
+  use Exop.Operation
+
+  parameter(:a, type: :integer, numericality: %{greater_than: 0})
+  parameter(:b, type: :integer, numericality: %{greater_than: 10})
+
+  def process(%{a: a, b: b} = _params), do: a * b
+end
+
+#iex> MultiplyService |> ExopData.generate() |> Enum.take(5)
+[
+  %{a: 401, b: 2889},
+  %{a: 7786, b: 5894},
+  %{a: 9187, b: 1863},
+  %{a: 3537, b: 1285},
+  %{a: 6124, b: 5521}
+]
+```
+
+So this helps to write tests a lot:
+
+```elixir
+defmodule ExopPropsTest do
+  use ExUnit.Case, async: true
+  use ExUnitProperties
+
+  property "Multiply" do
+    check all %{a: a, b: b} = params <- ExopData.generate(MultiplyService) do
+      {:ok, result} = MultiplyService.run(params)
+      expected_result = a * b
+      assert result == expected_result
+    end
+  end
+end
+```
+
+It has been decided to make this even cleaner with `check_operation` macro:
+
+```elixir
+defmodule ExopPropsTest do
+  use ExUnit.Case, async: true
+  use ExopData
+
+  property "Multiply" do
+    check_operation(MultiplyService, fn params ->
+      {:ok, result} = MultiplyService.run(params)
+      expected_result = a * b
+      assert result == expected_result
+    end)
+  end
+end
+```
+
+And of course `check_operation` still can receive custom generators:
+
+```elixir
+check_operation(MultiplyService, [generators: your_generators], fn params ->
+  # your checks here
+end)
 ```
 
 ## Exop docs
