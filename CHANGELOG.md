@@ -2,9 +2,9 @@
 
 ### Changes
 
-- `check_operation` macro to make your tests cleaner
-- `type: :uuid` support
-- `~g` sigil introduced, which helps you a lot with custom generators difinition
+- `check_operation` macro to make your tests cleaner and reduce boilerplate code
+- new Exop's `:uuid` type support
+- `~g` sigil introduced to help you during custom generators definition
 
 ## [0.1.4] - 2019.01.25
 
