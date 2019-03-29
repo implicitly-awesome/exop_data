@@ -51,7 +51,9 @@ defmodule ExopData do
 
       defp constantize_values(%StreamData{} = generator), do: generator
 
-      defp constantize_values(x) when is_map(x) do
+      defp constantize_values(%_{} = x), do: StreamData.constant(x)
+
+      defp constantize_values(%{} = x) do
         Enum.reduce(x, %{}, fn {k, v}, new_map ->
           Map.put(new_map, k, constantize_values(v))
         end)

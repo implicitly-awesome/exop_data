@@ -1,3 +1,9 @@
+## [0.1.6] - 2019.03.29
+
+### Changes
+
+- `~g` sigil bug has been fixed (didn't work with structs as certain values)
+
 ## [0.1.5] - 2019.03.29
 
 ### Changes

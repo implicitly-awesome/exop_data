@@ -435,5 +435,32 @@ defmodule CustomGeneratorsTest do
         assert is_binary(a.b.e.f)
       end
     end
+
+    defmodule MyStruct do
+      defstruct [:a, :b]
+    end
+
+    property "with struct" do
+      contract = [
+        %{
+          name: :mystruct,
+          opts: [
+            struct: MyStruct
+          ]
+        }
+      ]
+
+      my_struct = %MyStruct{a: 1, b: "2"}
+
+      custom = ~g[
+        mystruct: my_struct
+      ]
+
+      check all %{mystruct: mystruct} <- generate(contract, generators: custom) do
+        assert %MyStruct{} = mystruct
+        assert mystruct.a == 1
+        assert mystruct.b == "2"
+      end
+    end
   end
 end

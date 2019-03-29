@@ -41,7 +41,7 @@ Here is the [CHANGELOG](https://github.com/madeinussr/exop_data/blob/master/CHAN
 
 ```elixir
 def deps do
-  [{:exop_data, "~> 0.1.5"}]
+  [{:exop_data, "~> 0.1.6"}]
 end
 ```
 
