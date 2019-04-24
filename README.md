@@ -315,9 +315,11 @@ defmodule ExopPropsTest do
 
   property "Multiply" do
     check_operation(MultiplyService, fn params ->
-      {:ok, result} = MultiplyService.run(params)
-      expected_result = a * b
-      assert result == expected_result
+      assert is_intger(params.a)
+
+      # you simply should define expected result of an Operation
+      # under the hood this is compared with MultiplyService.run(params) result
+      {:ok, params.a * params.b}
     end)
   end
 end
