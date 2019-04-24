@@ -30,7 +30,7 @@ defmodule ExopData.Mixfile do
 
   defp deps do
     [
-      {:ex_doc, "~> 0.18.0", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.20", only: :dev, runtime: false},
       {:stream_data, "~> 0.1"},
       {:randex, "~> 0.4"}
     ]

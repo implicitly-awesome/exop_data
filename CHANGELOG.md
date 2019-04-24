@@ -1,3 +1,10 @@
+## [0.1.6] - yyyy.MM.dd
+
+### Changes
+
+- formatter rules
+- ex_doc 0.20
+
 ## [0.1.6] - 2019.03.29
 
 ### Changes
