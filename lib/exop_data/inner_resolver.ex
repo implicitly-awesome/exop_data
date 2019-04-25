@@ -13,7 +13,14 @@ defmodule ExopData.InnerResolver do
   Resolve :inner opts according to it's original checks.
   Returns updated (if needed) :inner check's opts.
   """
-  @spec resolve_inner_opts(%{length: map(), inner: map()}) :: map()
+  @spec resolve_inner_opts(%{length: map(), inner: map() | keyword()}) :: map()
+  def resolve_inner_opts(%{inner: inner_opts} = inner) when is_list(inner_opts) do
+    if inner_opts |> Enum.at(0) |> is_tuple() do
+      inner |> Map.put(:inner, Enum.into(inner_opts, %{})) |> resolve_inner_opts()
+    else
+      %{}
+    end
+  end
   def resolve_inner_opts(%{length: length_opts, inner: inner_opts})
       when is_map(length_opts) and is_map(inner_opts) do
     amount_to_add = inner_params_amount_to_add(length_opts, Enum.count(inner_opts))

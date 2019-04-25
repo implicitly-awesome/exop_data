@@ -247,4 +247,46 @@ defmodule ExopDataTest do
                    end
     end
   end
+
+  property "inner accepts keyword" do
+    contract = [
+      %{name: :a, opts: [type: :map, inner: [b: [type: :atom]]]}
+    ]
+
+    check all params <- generate(contract) do
+      assert %{a: %{b: b}} = params
+      assert is_atom(b)
+    end
+  end
+
+  property "empty inner" do
+    contract1 = [
+      %{name: :a, opts: [inner: []]}
+    ]
+    contract2 = [
+      %{name: :a, opts: [inner: %{}]}
+    ]
+
+    check all params <- generate(contract1) do
+      assert %{a: a} = params
+      assert is_map(a)
+      refute a |> Map.keys() |> Enum.any?()
+    end
+    check all params <- generate(contract2) do
+      assert %{a: a} = params
+      assert is_map(a)
+      refute a |> Map.keys() |> Enum.any?()
+    end
+  end
+
+  property "implicit inner" do
+    contract = [
+      %{name: :a, opts: [inner: %{b: [type: :atom]}]}
+    ]
+
+    check all params <- generate(contract) do
+      assert %{a: %{b: b}} = params
+      assert is_atom(b)
+    end
+  end
 end
