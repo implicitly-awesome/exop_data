@@ -4,6 +4,7 @@
 
 - formatter rules
 - ex_doc 0.20
+- elixir >= 1.6.0
 - :inner check accepts Keyword as well as Map
 
 ## [0.1.6] - 2019.03.29

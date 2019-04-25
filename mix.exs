@@ -10,7 +10,7 @@ defmodule ExopData.Mixfile do
     [
       app: :exop_data,
       version: "0.1.7",
-      elixir: ">= 1.5.0",
+      elixir: ">= 1.6.0",
       name: "ExopData",
       description: @description,
       package: package(),
