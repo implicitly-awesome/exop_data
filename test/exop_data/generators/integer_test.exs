@@ -43,8 +43,24 @@ defmodule ExopData.Generators.IntegerTest do
       end
     end
 
+    property "gt" do
+      generator = generate(%{numericality: %{gt: 1}})
+
+      check all value <- generator do
+        assert value > 1
+      end
+    end
+
     property "greater_than_or_equal_to" do
       generator = generate(%{numericality: %{greater_than_or_equal_to: 1}})
+
+      check all value <- generator do
+        assert value >= 1
+      end
+    end
+
+    property "gte" do
+      generator = generate(%{numericality: %{gte: 1}})
 
       check all value <- generator do
         assert value >= 1
@@ -67,8 +83,24 @@ defmodule ExopData.Generators.IntegerTest do
       end
     end
 
+    property "lt" do
+      generator = generate(%{numericality: %{lt: 1}})
+
+      check all value <- generator do
+        assert value < 1
+      end
+    end
+
     property "less_than_or_equal_to" do
       generator = generate(%{numericality: %{less_than_or_equal_to: 1}})
+
+      check all value <- generator do
+        assert value <= 1
+      end
+    end
+
+    property "lte" do
+      generator = generate(%{numericality: %{lte: 1}})
 
       check all value <- generator do
         assert value <= 1

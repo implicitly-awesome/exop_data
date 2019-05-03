@@ -43,8 +43,24 @@ defmodule ExopData.Generators.FloatTest do
       end
     end
 
+    property "gt" do
+      generator = generate(%{numericality: %{gt: 1.0}})
+
+      check all value <- generator do
+        assert value > 1.0
+      end
+    end
+
     property "greater_than_or_equal_to" do
       generator = generate(%{numericality: %{greater_than_or_equal_to: 1.0}})
+
+      check all value <- generator do
+        assert value >= 1.0
+      end
+    end
+
+    property "gte" do
+      generator = generate(%{numericality: %{gte: 1.0}})
 
       check all value <- generator do
         assert value >= 1.0
@@ -67,8 +83,24 @@ defmodule ExopData.Generators.FloatTest do
       end
     end
 
+    property "lt" do
+      generator = generate(%{numericality: %{lt: 1.0}})
+
+      check all value <- generator do
+        assert value < 1.0
+      end
+    end
+
     property "less_than_or_equal_to" do
       generator = generate(%{numericality: %{less_than_or_equal_to: 1.0}})
+
+      check all value <- generator do
+        assert value <= 1.0
+      end
+    end
+
+    property "lte" do
+      generator = generate(%{numericality: %{lte: 1.0}})
 
       check all value <- generator do
         assert value <= 1.0
