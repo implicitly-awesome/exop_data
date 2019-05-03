@@ -9,8 +9,8 @@ defmodule ExopData.Mixfile do
   def project do
     [
       app: :exop_data,
-      version: "0.1.6",
-      elixir: ">= 1.5.0",
+      version: "0.1.7",
+      elixir: ">= 1.6.0",
       name: "ExopData",
       description: @description,
       package: package(),
@@ -30,7 +30,7 @@ defmodule ExopData.Mixfile do
 
   defp deps do
     [
-      {:ex_doc, "~> 0.18.0", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.20", only: :dev, runtime: false},
       {:stream_data, "~> 0.1"},
       {:randex, "~> 0.4"}
     ]

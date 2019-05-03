@@ -3,12 +3,14 @@ defmodule ExopData.Generators.Integer do
   Implements ExopData generators behaviour for `integer` parameter type.
   """
 
+  alias ExopData.Generators.AliasResolvers.Numericality
+
   @behaviour ExopData.Generator
 
   @diff 9999
 
   def generate(opts \\ %{}, _props_opts \\ %{}) do
-    opts |> Map.get(:numericality) |> do_generate()
+    opts |> Map.get(:numericality) |> Numericality.resolve_aliases() |> do_generate()
   end
 
   @spec do_generate(map()) :: StreamData.t()
@@ -18,34 +20,6 @@ defmodule ExopData.Generators.Integer do
   defp do_generate(%{equals: exact}), do: constant(exact)
 
   defp do_generate(%{is: exact}), do: constant(exact)
-
-  defp do_generate(%{min: min} = contract) do
-    contract
-    |> Map.delete(:min)
-    |> Map.put(:greater_than_or_equal_to, min)
-    |> do_generate()
-  end
-
-  defp do_generate(%{max: max} = contract) do
-    contract
-    |> Map.delete(:max)
-    |> Map.put(:less_than_or_equal_to, max)
-    |> do_generate()
-  end
-
-  defp do_generate(%{min: min} = contract) do
-    contract
-    |> Map.delete(:min)
-    |> Map.put(:greater_than_or_equal_to, min)
-    |> do_generate()
-  end
-
-  defp do_generate(%{max: max} = contract) do
-    contract
-    |> Map.delete(:max)
-    |> Map.put(:less_than_or_equal_to, max)
-    |> do_generate()
-  end
 
   defp do_generate(%{greater_than: min, less_than: max}) do
     in_range(min + 1, max - 1)

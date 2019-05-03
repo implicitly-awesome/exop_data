@@ -463,4 +463,48 @@ defmodule CustomGeneratorsTest do
       end
     end
   end
+
+  property "nil as certain value" do
+    contract1 = [%{name: :a, opts: [type: :atom]}]
+    contract2 = [%{name: :a, opts: [inner: %{b: [type: :string, allow_nil: true]}]}]
+
+    custom1 = ~g[
+      a: nil
+    ]
+    custom2 = ~g[
+      a: %{
+        b: nil
+      }
+    ]
+    custom3 = ~g[
+      a: %{
+        b: "string"
+      }
+    ]
+    custom4 = ~g[
+      a: %{
+        b: 1
+      }
+    ]
+
+    check all params <- generate(contract1, generators: custom1) do
+      assert %{a: a} = params
+      assert is_nil(a)
+    end
+
+    check all params <- generate(contract2, generators: custom2) do
+      assert %{a: %{b: b}} = params
+      assert is_nil(b)
+    end
+
+    check all params <- generate(contract2, generators: custom3) do
+      assert %{a: %{b: b}} = params
+      assert is_binary(b)
+    end
+
+    check all params <- generate(contract2, generators: custom4) do
+      assert %{a: %{b: b}} = params
+      assert b == 1
+    end
+  end
 end

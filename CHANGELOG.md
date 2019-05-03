@@ -1,3 +1,13 @@
+## [0.1.7] - 2019.05.03
+
+### Changes
+
+- formatter rules
+- ex_doc 0.20
+- elixir >= 1.6.0
+- `:inner` check accepts Keyword as well as Map
+- `:numericality` aliases support (see Exop docs)
+
 ## [0.1.6] - 2019.03.29
 
 ### Changes
