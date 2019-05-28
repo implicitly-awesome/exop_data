@@ -10,6 +10,12 @@ Not interested in property-based testing, but need to generate data? ExopData wi
 
 Here is the [CHANGELOG](https://github.com/madeinussr/exop_data/blob/master/CHANGELOG.md)
 
+### Supported Exop version: *1.2.5*
+
+It means ExopData supports a certain contract notation version (types, checks, aliases etc.)
+Usually, ExopData lag behind Exop's new version for some time (depending on Exop's release size and introduced contract notation changes).
+Please refer to Exop's [changes](https://github.com/madeinussr/exop/blob/master/CHANGELOG.md)
+
 ## Table of Contents
 
 - [Installation](#installation)
